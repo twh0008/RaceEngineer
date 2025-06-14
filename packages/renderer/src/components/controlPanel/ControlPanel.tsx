@@ -43,37 +43,62 @@ export const ControlPanel = () => {
     setOverlays(initialOverlays);
     if (initialOverlays.length > 0) {
       setSelectedOverlay(initialOverlays[0].id);
-    }
-  }, []);
+    }  }, []);
+  
   const toggleOverlay = async (overlayId: string) => {
     const overlay = overlays.find(o => o.id === overlayId);
     if (!overlay) return;
 
+    // Update the overlay's enabled state
+    const newEnabledState = !overlay.enabled;
     setOverlays((prev) =>
       prev.map((o) =>
         o.id === overlayId
-          ? { ...o, enabled: !o.enabled }
+          ? { ...o, enabled: newEnabledState }
           : o
       )
     );
 
-    // Create or close overlay window based on new enabled state
-    if (!overlay.enabled) {
-      // Currently disabled, about to enable - create overlay
-      console.log("Creating overlay:", overlay.name);
-      if (createOverlay) {
-        try {
-          const result = await createOverlay(overlay);
-          console.log(`Created overlay: ${overlay.name}, result:`, result);
-        } catch (error) {
-          console.error(`Failed to create overlay ${overlay.name}:`, error);
+    // Only create/close overlays if a session is active
+    if (isConnected) {
+      if (newEnabledState) {
+        // Overlay is being enabled - create it
+        console.log("Creating overlay:", overlay.name);
+        if (createOverlay) {
+          try {
+            const result = await createOverlay(overlay);
+            console.log(`Created overlay: ${overlay.name}, result:`, result);
+          } catch (error) {
+            console.error(`Failed to create overlay ${overlay.name}:`, error);
+          }
+        }
+      } else {
+        // Overlay is being disabled - close it
+        console.log("Closing overlay:", overlay.name);
+        // For now, close all overlays and recreate the active ones
+        // In a full implementation, we'd track window IDs per overlay and close specific ones
+        if (closeAllOverlays) {
+          try {
+            await closeAllOverlays();
+            console.log("Closed all overlays");
+            
+            // Recreate all other enabled overlays
+            const otherEnabledOverlays = overlays.filter(o => o.id !== overlayId && o.enabled);
+            if (createOverlay) {
+              for (const o of otherEnabledOverlays) {
+                try {
+                  await createOverlay(o);
+                  console.log(`Recreated overlay: ${o.name}`);
+                } catch (error) {
+                  console.error(`Failed to recreate overlay ${o.name}:`, error);
+                }
+              }
+            }
+          } catch (error) {
+            console.error("Failed to close overlays:", error);
+          }
         }
       }
-    } else {
-      // Currently enabled, about to disable - close overlay
-      console.log("Closing overlay:", overlay.name);
-      // Note: closeOverlay would need overlay window ID, for now we'll use closeAllOverlays
-      // In a full implementation, we'd track window IDs per overlay
     }
   };
 
@@ -108,7 +133,6 @@ export const ControlPanel = () => {
       })
     );
   };
-
   const selectedOverlayData = selectedOverlay
     ? overlays.find((o) => o.id === selectedOverlay)
     : null;
@@ -116,38 +140,42 @@ export const ControlPanel = () => {
   
   const startSession = async () => {
     console.log("Starting session...");
-    console.log(
-      "Enabled overlays:",
-      overlays.filter((o) => o.enabled)
-    );
-    console.log("isElectron:", !!window.electronAPI);
-    console.log("createOverlay function:", createOverlay);
-
+    
+    // First set the connection state to active
     setIsConnected(true);
+    
+    // Find all enabled overlays
     const enabledOverlays = overlays.filter((o) => o.enabled);
-
+    console.log("Enabled overlays:", enabledOverlays);
+    
     if (enabledOverlays.length === 0) {
       console.log("No overlays enabled");
       return;
     }
 
+    console.log("isElectron:", !!window.electronAPI);
+    console.log("createOverlay function:", createOverlay);
+
+    // Create all enabled overlays
+    if (!createOverlay) {
+      console.error("createOverlay function is not available");
+      return;
+    }
+
     for (const overlay of enabledOverlays) {
-      console.log("Attempting to create overlay:", overlay.name);
-      if (createOverlay) {
-        try {
-          const result = await createOverlay(overlay);
-          console.log(`Created overlay: ${overlay.name}, result:`, result);
-        } catch (error) {
-          console.error(`Failed to create overlay ${overlay.name}:`, error);
-        }
-      } else {
-        console.error("createOverlay function is not available");
+      console.log("Creating overlay:", overlay.name);
+      try {
+        const result = await createOverlay(overlay);
+        console.log(`Created overlay: ${overlay.name}, result:`, result);
+      } catch (error) {
+        console.error(`Failed to create overlay ${overlay.name}:`, error);
       }
     }
   };
-
   const stopSession = async () => {
-    setIsConnected(false);
+    console.log("Stopping session...");
+    
+    // First close all overlay windows
     if (closeAllOverlays) {
       try {
         await closeAllOverlays();
@@ -156,6 +184,9 @@ export const ControlPanel = () => {
         console.error("Failed to close overlays:", error);
       }
     }
+    
+    // Then update the connection state
+    setIsConnected(false);
   };
 
   return (
