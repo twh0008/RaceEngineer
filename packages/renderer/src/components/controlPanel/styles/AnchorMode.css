@@ -1,0 +1,64 @@
+.anchor-mode-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #374151;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-left: 12px;
+}
+
+.anchor-mode-button:hover {
+  background-color: #4b5563;
+}
+
+.anchor-mode-button:active {
+  transform: scale(0.98);
+}
+
+.anchor-mode-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.anchor-mode-button--active {
+  background-color: #10b981;
+}
+
+.anchor-mode-button--active:hover {
+  background-color: #059669;
+}
+
+.anchor-mode-button__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.anchor-mode-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  padding: 8px;
+  background-color: rgba(16, 185, 129, 0.2);
+  border-radius: 6px;
+  border: 1px solid #10b981;
+  color: #10b981;
+  font-weight: 500;
+}
+
+.anchor-mode-indicator__text {
+  margin: 0;
+}
+
+.anchor-mode-help {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}

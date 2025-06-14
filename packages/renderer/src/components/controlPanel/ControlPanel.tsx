@@ -4,7 +4,9 @@ import { useElectron } from "../../hooks/useElectron";
 import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
 import { OverlayConfigPanel } from "./OverlayConfigPanel";
 import dragHandle from "../../assets/drag-handle.svg";
+import anchorIcon from "../../assets/anchor-icon.svg";
 import "./styles/ControlPanel.css";
+import "./styles/AnchorMode.css";
 
 interface OverlayConfigExtended extends OverlayConfig {
   config: {
@@ -21,31 +23,83 @@ export const ControlPanel = () => {
   const [overlays, setOverlays] = useState<OverlayConfigExtended[]>([]);
   const [selectedOverlay, setSelectedOverlay] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const { createOverlay, closeOverlay, closeAllOverlays } = useElectron();
-
-  useEffect(() => {
+  const [isAnchorMode, setIsAnchorMode] = useState(false);
+  const [savedPositions, setSavedPositions] = useState<Record<string, { x: number; y: number }>>({});  const { 
+    createOverlay, 
+    closeOverlay, 
+    closeAllOverlays, 
+    getOverlayPosition, 
+    saveOverlayPositions, 
+    loadOverlayPositions,
+    updateOverlayProperties
+  } = useElectron();useEffect(() => {
     console.log("Available overlays:", AVAILABLE_OVERLAYS);
-    const initialOverlays = AVAILABLE_OVERLAYS.map((overlay) => ({
-      id: overlay.id,
-      name: overlay.name,
-      description: overlay.description,
-      enabled: false,
-      position: { x: 100, y: 100 },
-      size: overlay.defaultSize,
-      config: {
-        textColor: "#ffffff",
-        backgroundColor: "#1f2937",
-        opacity: 90,
-        fontSize: 14,
-        updateRate: 100,
-      },
-    }));
-    console.log("Initial overlays:", initialOverlays);
-    setOverlays(initialOverlays);
-    if (initialOverlays.length > 0) {
-      setSelectedOverlay(initialOverlays[0].id);
-    }  }, []);
-    const toggleOverlay = async (overlayId: string) => {
+    
+    // Load saved positions if available
+    const loadSavedPositions = async () => {
+      try {
+        if (loadOverlayPositions) {
+          const positions = await loadOverlayPositions();
+          console.log("Loaded saved positions:", positions);
+          setSavedPositions(positions || {});
+          
+          // Initialize overlays with saved positions
+          const initialOverlays = AVAILABLE_OVERLAYS.map((overlay) => {
+            const savedPosition = positions?.[overlay.id];
+            
+            return {
+              id: overlay.id,
+              name: overlay.name,
+              description: overlay.description,
+              enabled: false,
+              position: savedPosition || { x: 100, y: 100 },
+              size: overlay.defaultSize,
+              config: {
+                textColor: "#ffffff",
+                backgroundColor: "#1f2937",
+                opacity: 90,
+                fontSize: 14,
+                updateRate: 100,
+              },
+            };
+          });
+          
+          console.log("Initial overlays:", initialOverlays);
+          setOverlays(initialOverlays);
+          if (initialOverlays.length > 0) {
+            setSelectedOverlay(initialOverlays[0].id);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load saved positions:", error);
+        
+        // Fall back to default positions if loading fails
+        const initialOverlays = AVAILABLE_OVERLAYS.map((overlay) => ({
+          id: overlay.id,
+          name: overlay.name,
+          description: overlay.description,
+          enabled: false,
+          position: { x: 100, y: 100 },
+          size: overlay.defaultSize,
+          config: {
+            textColor: "#ffffff",
+            backgroundColor: "#1f2937",
+            opacity: 90,
+            fontSize: 14,
+            updateRate: 100,
+          },
+        }));
+        
+        console.log("Initial overlays (default):", initialOverlays);
+        setOverlays(initialOverlays);
+        if (initialOverlays.length > 0) {
+          setSelectedOverlay(initialOverlays[0].id);
+        }
+      }
+    };
+    
+    loadSavedPositions();
+  }, [loadOverlayPositions]);    const toggleOverlay = async (overlayId: string) => {
     const overlay = overlays.find(o => o.id === overlayId);
     if (!overlay) return;
 
@@ -54,12 +108,17 @@ export const ControlPanel = () => {
     
     // Only create/close overlays if a session is active
     if (isConnected) {
-      if (newEnabledState) {
-        // Overlay is being enabled - create it
+      if (newEnabledState) {        // Overlay is being enabled - create it
         console.log("Creating overlay:", overlay.name);
         if (createOverlay) {
           try {
-            const windowId = await createOverlay(overlay);
+            // Set anchor mode flag when creating overlays if anchor mode is active
+            const overlayWithAnchorMode = {
+              ...overlay,
+              anchorMode: isAnchorMode
+            };
+            
+            const windowId = await createOverlay(overlayWithAnchorMode);
             console.log(`Created overlay: ${overlay.name}, windowId:`, windowId);
             
             // Update state with the window ID
@@ -176,8 +235,7 @@ export const ControlPanel = () => {
   const selectedOverlayData = selectedOverlay
     ? overlays.find((o) => o.id === selectedOverlay)
     : null;
-  const enabledCount = overlays.filter((o) => o.enabled).length;
-    const startSession = async () => {
+  const enabledCount = overlays.filter((o) => o.enabled).length;    const startSession = async () => {
     console.log("Starting session...");
     
     // First set the connection state to active
@@ -207,7 +265,13 @@ export const ControlPanel = () => {
     for (const overlay of enabledOverlays) {
       console.log("Creating overlay:", overlay.name);
       try {
-        const windowId = await createOverlay(overlay);
+        // Set anchor mode flag when creating overlays if anchor mode is active
+        const overlayWithAnchorMode = {
+          ...overlay,
+          anchorMode: isAnchorMode
+        };
+        
+        const windowId = await createOverlay(overlayWithAnchorMode);
         console.log(`Created overlay: ${overlay.name}, windowId:`, windowId);
         
         // Update the window ID in our copy
@@ -225,7 +289,7 @@ export const ControlPanel = () => {
 
     // Update the state with all window IDs
     setOverlays(updatedOverlays);
-  };  const stopSession = async () => {
+  };const stopSession = async () => {
     console.log("Stopping session...");
     
     // First close all overlay windows
@@ -246,6 +310,72 @@ export const ControlPanel = () => {
       ...overlay,
       windowId: undefined
     })));
+  };  const toggleAnchorMode = async () => {
+    if (!isConnected) {
+      console.log("Cannot toggle anchor mode when session is not active");
+      return;
+    }
+    
+    const newAnchorModeState = !isAnchorMode;
+    setIsAnchorMode(newAnchorModeState);
+      // Define newPositions outside the if block so we can use it for both cases
+    const newPositions: Record<string, { x: number; y: number }> = {...savedPositions};
+    
+    if (!newAnchorModeState) {
+      // Exiting anchor mode - save positions
+      
+      // Get positions of all active overlays
+      for (const overlay of overlays) {
+        if (overlay.enabled && overlay.windowId) {
+          try {
+            const position = await getOverlayPosition(overlay.id);
+            if (position) {
+              newPositions[overlay.id] = position;
+              console.log(`Saved position for ${overlay.name}:`, position);
+            }
+          } catch (error) {
+            console.error(`Failed to get position for ${overlay.name}:`, error);
+          }
+        }
+      }
+      
+      // Save positions
+      try {
+        await saveOverlayPositions(newPositions);
+        console.log("Saved all overlay positions");
+        
+        // Update state with new positions
+        setSavedPositions(newPositions);
+        setOverlays(prev => 
+          prev.map(overlay => ({
+            ...overlay,
+            position: newPositions[overlay.id] || overlay.position
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to save overlay positions:", error);
+      }
+    }
+    
+    // Update all active overlays with the new anchor mode state
+    const enabledOverlays = overlays.filter(o => o.enabled);
+    for (const overlay of enabledOverlays) {
+      if (updateOverlayProperties) {
+        try {
+          // Include both anchor mode and position in the update
+          const overlayWithUpdates = {
+            ...overlay,
+            anchorMode: newAnchorModeState,
+            position: newPositions[overlay.id] || overlay.position  // Use the updated positions
+          };
+          
+          await updateOverlayProperties(overlayWithUpdates);
+          console.log(`Updated overlay ${overlay.name} with anchor mode ${newAnchorModeState} and position:`, newPositions[overlay.id] || overlay.position);
+        } catch (error) {
+          console.error(`Failed to update overlay ${overlay.name}:`, error);
+        }
+      }
+    }
   };
 
   return (
@@ -260,9 +390,7 @@ export const ControlPanel = () => {
         <h1 className="titlebar-heading">
           Race Engineer Control Panel
         </h1>
-      </div>
-
-      <div className="panel-content">
+      </div>      <div className="panel-content">
         <div className="status-card">
           <div className="status-header">
             <div className="status-info">
@@ -277,25 +405,44 @@ export const ControlPanel = () => {
                     } ready to start`}
               </p>
             </div>
-            <button
-              className={`session-button ${
-                enabledCount === 0 || !window.electronAPI
-                  ? "session-button--disabled"
+            <div className="status-controls">
+              <button
+                className={`session-button ${
+                  enabledCount === 0 || !window.electronAPI
+                    ? "session-button--disabled"
+                    : isConnected
+                    ? "session-button--stop"
+                    : "session-button--start"
+                }`}
+                disabled={enabledCount === 0 || !window.electronAPI}
+                onClick={isConnected ? stopSession : startSession}
+              >
+                {!window.electronAPI
+                  ? "Electron Required"
                   : isConnected
-                  ? "session-button--stop"
-                  : "session-button--start"
-              }`}
-              disabled={enabledCount === 0 || !window.electronAPI}
-              onClick={isConnected ? stopSession : startSession}
-            >
-              {!window.electronAPI
-                ? "Electron Required"
-                : isConnected
-                ? "Stop Session"
-                : "Start Session"}
-            </button>
+                  ? "Stop Session"
+                  : "Start Session"}
+              </button>
+              {isConnected && (
+                <button
+                  className={`anchor-mode-button ${isAnchorMode ? 'anchor-mode-button--active' : ''}`}
+                  onClick={toggleAnchorMode}
+                >
+                  <img src={anchorIcon} alt="Anchor" className="anchor-mode-button__icon" />
+                  {isAnchorMode ? "Save Positions" : "Position Overlays"}
+                </button>
+              )}
+            </div>
           </div>
-        </div>        <div className="panel-layout">
+          
+          {isAnchorMode && (
+            <div className="anchor-mode-indicator">
+              <p className="anchor-mode-indicator__text">
+                Anchor Mode Active: Position your overlays where you want them, then click "Save Positions"
+              </p>
+            </div>
+          )}
+        </div><div className="panel-layout">
           {/* Left Panel - Overlay Selection */}
           <OverlaySelectionPanel
             overlays={overlays}

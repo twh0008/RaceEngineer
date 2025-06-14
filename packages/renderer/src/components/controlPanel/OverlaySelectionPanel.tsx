@@ -38,11 +38,12 @@ export const OverlaySelectionPanel = ({
         <p className="overlay-selection-panel__loading">Loading overlays...</p>
       ) : (
         <div className="overlay-selection-panel__list">
-          {overlays.map((overlay) => (
-            <div
+          {overlays.map((overlay) => (            <div
               key={overlay.id}
               className={`overlay-selection-panel__item ${
                 selectedOverlay === overlay.id ? 'overlay-selection-panel__item--selected' : ''
+              } ${
+                overlay.enabled ? 'overlay-selection-panel__item--enabled' : ''
               }`}
               onClick={() => onSelectOverlay(overlay.id)}
             >
