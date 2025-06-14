@@ -13,13 +13,11 @@ interface OverlayConfigExtended extends OverlayConfig {
 
 interface OverlayConfigPanelProps {
   selectedOverlay: OverlayConfigExtended | null | undefined;
-  onToggleOverlay: (overlayId: string) => void;
   onUpdateConfig: (overlayId: string, key: string, value: string | number) => void;
 }
 
 export const OverlayConfigPanel = ({ 
   selectedOverlay, 
-  onToggleOverlay, 
   onUpdateConfig 
 }: OverlayConfigPanelProps) => {
   if (!selectedOverlay) {
@@ -42,7 +40,7 @@ export const OverlayConfigPanel = ({
   return (
     <div className="config-panel">
       <div>
-        {/* Header with Title and Enable/Disable */}
+        {/* Header with Title */}
         <div className="config-panel-header">
           <div>
             <h2 className="config-panel-header__title">
@@ -51,25 +49,6 @@ export const OverlayConfigPanel = ({
             <p className="config-panel-header__description">
               {selectedOverlay.description}
             </p>
-          </div>
-          <div className="config-panel-header__controls">
-            <span className={`config-panel-header__status ${
-              selectedOverlay.enabled 
-                ? "config-panel-header__status--enabled" 
-                : "config-panel-header__status--disabled"
-            }`}>
-              {selectedOverlay.enabled ? 'Enabled' : 'Disabled'}
-            </span>
-            <button
-              onClick={() => onToggleOverlay(selectedOverlay.id)}
-              className={`config-panel-button ${
-                selectedOverlay.enabled 
-                  ? "config-panel-button--disable" 
-                  : "config-panel-button--enable"
-              }`}
-            >
-              {selectedOverlay.enabled ? 'Disable' : 'Enable'}
-            </button>
           </div>
         </div>
 
