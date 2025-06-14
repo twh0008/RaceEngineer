@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import './styles/RelativeWidget.css';
 
 interface RelativeData {
   position: number;
@@ -55,7 +56,8 @@ export const RelativeWidget = () => {
     
     setRelativeData(positions);
   }, [playerPosition]);
-    // Initialize or reset drivers when position changes
+  
+  // Initialize or reset drivers when position changes
   useEffect(() => {
     const initializeDrivers = () => {
       const shuffledDrivers = [...driverPool].sort(() => Math.random() - 0.5);
@@ -83,7 +85,8 @@ export const RelativeWidget = () => {
     
     initializeDrivers();
   }, [playerPosition, updatePositionDisplay]);
-    // Update gap simulation on interval
+  
+  // Update gap simulation on interval
   useEffect(() => {
     const updateRaceData = () => {
       if (driversRef.current.length === 0 || gapsRef.current.length === 0) return;
@@ -124,105 +127,45 @@ export const RelativeWidget = () => {
     const interval = setInterval(updateRaceData, 100); // Update every 100ms for smooth changes
     
     return () => clearInterval(interval);
-  }, [updatePositionDisplay]); // Only depends on updatePositionDisplay, which includes playerPosition
-  const containerStyle = {
-    position: 'fixed' as const,
-    top: '0',
-    left: '0',
-    right: '0',
-    bottom: '0',
-    pointerEvents: 'auto' as const,
-    cursor: 'move',
-    userSelect: 'none' as const,
-    WebkitAppRegion: 'drag' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: '320px',
-    margin: 'auto'
-  };
-  const widgetStyle = {
-    width: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    borderRadius: '8px',
-    border: '1px solid #374151',
-    overflow: 'hidden'
-  };
+  }, [updatePositionDisplay]);
 
-  const headerStyle = {
-    backgroundColor: '#1f2937',
-    padding: '8px 12px',
-    borderBottom: '1px solid #374151'
-  };
-
-  const tableStyle = {
-    width: '100%',
-    borderCollapse: 'collapse' as const
-  };
-
-  const rowStyle = (isPlayer?: boolean, isEven?: boolean) => ({
-    backgroundColor: isPlayer 
-      ? '#3b82f6' 
-      : isEven 
-        ? 'rgba(31, 41, 55, 0.6)' 
-        : 'rgba(17, 24, 39, 0.6)',
-    borderBottom: '1px solid #374151'
-  });
-
-  const cellStyle = {
-    padding: '4px 8px',
-    fontSize: '0.875rem',
-    fontFamily: 'monospace'
-  };
-
-  const getGapColor = (gap: string) => {
-    if (gap.startsWith('+')) return '#10b981'; // green
-    if (gap.startsWith('-')) return '#ef4444'; // red
-    return 'white';
+  const getGapClassName = (gap: string): string => {
+    if (gap.startsWith('+')) return 'relative-widget__gap--positive';
+    if (gap.startsWith('-')) return 'relative-widget__gap--negative';
+    return 'relative-widget__gap--neutral';
   };
 
   return (
-    <div style={containerStyle}>
-      <div style={widgetStyle}>
-        <div style={headerStyle}>
-          <h3 style={{ 
-            margin: 0, 
-            fontSize: '1rem', 
-            fontWeight: 'bold', 
-            color: 'white' 
-          }}>
+    <div className="relative-widget">
+      <div className="relative-widget__container">
+        <div className="relative-widget__header">
+          <h3 className="relative-widget__title">
             Relative Positions
           </h3>
         </div>
         
-        <table style={tableStyle}>
+        <table className="relative-widget__table">
           <tbody>
             {relativeData.map((driver, idx) => (
               <tr
                 key={driver.position}
-                style={rowStyle(driver.isPlayer, idx % 2 === 0)}
+                className={`relative-widget__row ${
+                  driver.isPlayer 
+                    ? 'relative-widget__row--player' 
+                    : idx % 2 === 0 
+                      ? 'relative-widget__row--even' 
+                      : 'relative-widget__row--odd'
+                }`}
               >
-                <td style={{ ...cellStyle, color: 'white', width: '40px' }}>
+                <td className="relative-widget__cell relative-widget__position">
                   {driver.position}
                 </td>
-                <td style={{ 
-                  ...cellStyle, 
-                  color: driver.isPlayer ? 'white' : '#e5e7eb',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: '120px'
-                }}>
+                <td className={`relative-widget__cell relative-widget__driver ${
+                  driver.isPlayer ? 'relative-widget__driver--player' : ''
+                }`}>
                   {driver.driver}
                 </td>
-                <td style={{ 
-                  ...cellStyle, 
-                  color: getGapColor(driver.gap),
-                  textAlign: 'right',
-                  width: '60px'
-                }}>
+                <td className={`relative-widget__cell relative-widget__gap ${getGapClassName(driver.gap)}`}>
                   {driver.gap}
                 </td>
               </tr>

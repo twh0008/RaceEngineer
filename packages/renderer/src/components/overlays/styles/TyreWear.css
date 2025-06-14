@@ -1,0 +1,53 @@
+.tyre-wear {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  cursor: move;
+  user-select: none;
+  -webkit-app-region: drag;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tyre-wear__title {
+  margin-bottom: 16px;
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.tyre-wear__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.tyre-wear__item {
+  text-align: center;
+}
+
+.tyre-wear__label {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.tyre-wear__bar {
+  height: 16px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+.tyre-wear__value {
+  font-size: 1.125rem;
+  font-weight: bold;
+}

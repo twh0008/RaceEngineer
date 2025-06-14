@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import './styles/TrackPositionOverlay.css';
 
 interface TrackPositionProps {
   trackName?: string;
@@ -127,58 +128,17 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
   // Get current position coordinates
   const carCoordinates = getPositionOnTrack(carPosition);
   
-  // Container style with full-window drag support
-  const containerStyle = {
-    position: 'fixed' as const,
-    top: '0',
-    left: '0',
-    right: '0',
-    bottom: '0',
-    pointerEvents: 'auto' as const,
-    cursor: 'move',
-    userSelect: 'none' as const,
-    WebkitAppRegion: 'drag' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: '350px',
-    margin: 'auto'
-  };
-  
-  const overlayStyle = {
-    width: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    borderRadius: '8px',
-    border: '1px solid #374151',
-    padding: '10px',
-    overflow: 'hidden'
-  };
-  
-  const headerStyle = {
-    backgroundColor: '#1f2937',
-    padding: '8px 12px',
-    borderBottom: '1px solid #374151',
-    marginBottom: '10px'
-  };
-  
   return (
-    <div style={containerStyle}>
-      <div style={overlayStyle}>
-        <div style={headerStyle}>
-          <h3 style={{ 
-            margin: 0, 
-            fontSize: '1rem', 
-            fontWeight: 'bold', 
-            color: 'white',
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}>
+    <div className="track-position">
+      <div className="track-position__overlay">
+        <div className="track-position__header">
+          <h3 className="track-position__title">
             <span>Track Position - {trackName.toUpperCase()}</span>
-            <span style={{ color: '#3b82f6' }}>Lap {lapCount}</span>
+            <span className="track-position__lap">Lap {lapCount}</span>
           </h3>
-        </div>        <div style={{ width: '100%', height: '220px', position: 'relative' }}>
+        </div>
+        
+        <div className="track-position__svg-container">
           <svg 
             viewBox="0 0 120 200" 
             style={{ width: '100%', height: '100%' }}
@@ -187,11 +147,7 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
             {/* Track outline */}
             <path
               d={trackPath}
-              fill="none"
-              stroke="#6B7280"
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              className="track-position__track"
             />
             
             {/* Track sectors (Spa-specific) */}
@@ -199,12 +155,8 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
               <path
                 key={`sector-${idx}`}
                 d={sector.path}
-                fill="none"
-                stroke={sector.color}
-                strokeWidth="2"
-                strokeOpacity="0.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                className="track-position__sector"
+                style={{ stroke: sector.color }}
               />
             ))}
             
@@ -213,9 +165,7 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
               cx={carCoordinates.x} 
               cy={carCoordinates.y} 
               r="5" 
-              fill="#3b82f6" 
-              stroke="white"
-              strokeWidth="2"
+              className="track-position__car"
             />
             
             {/* Direction arrow */}
@@ -223,10 +173,7 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
               cx={carCoordinates.x} 
               cy={carCoordinates.y} 
               r="10" 
-              fill="none" 
-              stroke="#3b82f6"
-              strokeWidth="1"
-              strokeDasharray="2,2"
+              className="track-position__car-direction"
             />
             
             {/* Corner markers for Spa */}
@@ -236,11 +183,11 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
                   cx={corner.x}
                   cy={corner.y}
                   r="4"
-                  fill={hoveredCorner === corner.name ? "#FFC107" : "#F59E0B"}
-                  opacity={hoveredCorner === corner.name ? "1" : "0.7"}
+                  className={`track-position__corner ${
+                    hoveredCorner === corner.name ? 'track-position__corner--active' : ''
+                  }`}
                   onMouseEnter={() => setHoveredCorner(corner.name)}
                   onMouseLeave={() => setHoveredCorner(null)}
-                  style={{ cursor: 'pointer' }}
                 />
                 {hoveredCorner === corner.name && (
                   <g>
@@ -250,86 +197,67 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
                       width="100"
                       height="40"
                       rx="5"
-                      fill="rgba(0,0,0,0.8)"
+                      className="track-position__corner-tooltip"
                     />
                     <text
                       x={corner.x + 15}
                       y={corner.y - 5}
-                      fill="white"
-                      fontSize="10"
-                      fontWeight="bold"
+                      className="track-position__corner-name"
                     >
                       {corner.name}
                     </text>
                     <text
                       x={corner.x + 15}
                       y={corner.y + 10}
-                      fill="#9CA3AF"
-                      fontSize="8"
+                      className="track-position__corner-description"
                     >
                       {corner.description}
                     </text>
                   </g>
                 )}
               </g>
-            ))}            {/* Show DRS zones for Spa */}
+            ))}
+            
+            {/* Show DRS zones for Spa */}
             {trackName === "spa" && (
               <>
                 <path
                   d="M 46,48 L 66,64"
-                  stroke="#22D3EE"
-                  strokeWidth="3"
-                  strokeDasharray="4,4"
-                  strokeOpacity="0.8"
+                  className="track-position__drs-zone"
                 />
                 <path
                   d="M 36,184 L 16,156"
-                  stroke="#22D3EE"
-                  strokeWidth="3"
-                  strokeDasharray="4,4"
-                  strokeOpacity="0.8"
+                  className="track-position__drs-zone"
                 />
-                <text x="50" y="45" fill="#22D3EE" fontSize="8" fontWeight="bold">DRS ZONE 1</text>
-                <text x="25" y="170" fill="#22D3EE" fontSize="8" fontWeight="bold">DRS ZONE 2</text>
+                <text x="50" y="45" className="track-position__drs-label">DRS ZONE 1</text>
+                <text x="25" y="170" className="track-position__drs-label">DRS ZONE 2</text>
               </>
             )}
           </svg>
-            {/* Track information tooltip */}
-          <div style={{ 
-            position: 'absolute', 
-            bottom: '10px', 
-            right: '10px',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            padding: '8px 12px',
-            borderRadius: '4px',
-            fontSize: '0.8rem',
-            color: 'white',
-            width: '120px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+          
+          {/* Track information tooltip */}
+          <div className="track-position__info">
+            <div className="track-position__info-row">
               <span>Track:</span>
-              <span style={{ fontWeight: 'bold' }}>{trackName.toUpperCase()}</span>
+              <span className="track-position__info-value">{trackName.toUpperCase()}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <div className="track-position__info-row">
               <span>Lap:</span>
-              <span style={{ fontWeight: 'bold' }}>{lapCount}</span>
+              <span className="track-position__info-value">{lapCount}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <div className="track-position__info-row">
               <span>Sector:</span>
-              <span style={{ 
-                fontWeight: 'bold', 
-                color: currentSector === 1 ? '#4CAF50' : currentSector === 2 ? '#FFC107' : '#F44336'
-              }}>
+              <span className={`track-position__info-value track-position__sector-${currentSector}`}>
                 {currentSector}
               </span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <div className="track-position__info-row">
               <span>Speed:</span>
-              <span style={{ fontWeight: 'bold' }}>{carSpeed} km/h</span>
+              <span className="track-position__info-value">{carSpeed} km/h</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="track-position__info-row">
               <span>Pos:</span>
-              <span style={{ fontWeight: 'bold' }}>{Math.floor(carPosition * 100)}%</span>
+              <span className="track-position__info-value">{Math.floor(carPosition * 100)}%</span>
             </div>
           </div>
         </div>

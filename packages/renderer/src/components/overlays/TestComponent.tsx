@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { TelemetryData } from '../../types/telemetry';
 import { telemetryService } from '../../services/telemetry/TelemetryService';
+import './styles/TestComponent.css';
 
 export const TestComponent = () => {
   const [telemetry, setTelemetry] = useState<TelemetryData | null>(null);
@@ -15,135 +16,72 @@ export const TestComponent = () => {
   }, []);
 
   if (!telemetry) return null;
-  const containerStyle = {
-    position: 'fixed' as const,
-    top: '0',
-    left: '0',
-    right: '0',
-    bottom: '0',
-    pointerEvents: 'auto' as const,
-    cursor: 'move',
-    userSelect: 'none' as const,
-    WebkitAppRegion: 'drag' as const,
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    padding: '16px',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'center',
-    alignItems: 'center'
-  };
-  const titleBarStyle = {
-    height: '24px',
-    backgroundColor: 'rgba(31, 41, 55, 0.5)',
-    borderRadius: '8px 8px 0 0',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '8px',
-    fontSize: '0.75rem',
-    color: '#d1d5db'
-  };
-  const contentStyle = {
-    maxWidth: '1024px',
-    margin: '0 auto',
-    display: 'grid',
-    gridTemplateColumns: '280px 280px 280px', // Fixed column widths
-    gap: '8px'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    color: 'white',
-    padding: '12px',
-    borderRadius: '8px',
-    border: '1px solid #374151'
-  };
 
   return (
-    <div style={containerStyle}>      {/* Title bar */}
-      <div style={titleBarStyle}>
+    <div className="test-component">
+      {/* Title bar */}
+      <div className="test-component__title-bar">
         Race Engineer - Drag to move
       </div>
 
-      <div style={contentStyle}>        {/* Speed and RPM */}
-        <div style={cardStyle}>
-          <div style={{ 
-            fontSize: '2.5rem', 
-            fontWeight: 'bold',
-            minWidth: '200px', // Fixed width to prevent resizing
-            textAlign: 'left'
-          }}>
+      <div className="test-component__content">
+        {/* Speed and RPM */}
+        <div className="test-component__card">
+          <div className="test-component__speed">
             {telemetry.speed} km/h
           </div>
-          <div style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: '600', 
-            marginTop: '4px',
-            minWidth: '200px', // Fixed width to prevent resizing
-            textAlign: 'left'
-          }}>
+          <div className="test-component__rpm">
             {telemetry.rpm.toLocaleString()} RPM
           </div>
-          <div style={{ 
-            fontSize: '1.875rem', 
-            fontWeight: 'bold', 
-            marginTop: '4px',
-            minWidth: '200px', // Fixed width to prevent resizing
-            textAlign: 'left'
-          }}>
+          <div className="test-component__gear">
             Gear: {telemetry.gear}
           </div>
         </div>
 
         {/* Lap Times */}
-        <div style={cardStyle}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <div className="test-component__card">
+          <div className="test-component__lap-times">
             <div>
-              <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>Current:</span>
-              <span style={{ fontSize: '1.5rem', marginLeft: '8px' }}>{telemetry.lapTime}</span>
+              <span className="test-component__lap-label">Current:</span>
+              <span className="test-component__current-lap">{telemetry.lapTime}</span>
             </div>
             <div>
-              <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>Last:</span>
-              <span style={{ fontSize: '1.25rem', marginLeft: '8px' }}>{telemetry.lastLap}</span>
+              <span className="test-component__lap-label">Last:</span>
+              <span className="test-component__last-lap">{telemetry.lastLap}</span>
             </div>
             <div>
-              <span style={{ color: '#a855f7', fontSize: '0.875rem' }}>Best:</span>
-              <span style={{ fontSize: '1.25rem', marginLeft: '8px' }}>{telemetry.bestLap}</span>
+              <span className="test-component__best-label">Best:</span>
+              <span className="test-component__best-lap">{telemetry.bestLap}</span>
             </div>
           </div>
         </div>
 
         {/* Car Status */}
-        <div style={cardStyle}>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr', 
-            gap: '4px' 
-          }}>
+        <div className="test-component__card">
+          <div className="test-component__status-grid">
             <div>
-              <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>Fuel:</span>
-              <span style={{ fontSize: '1.125rem', marginLeft: '4px' }}>
+              <span className="test-component__status-label">Fuel:</span>
+              <span className="test-component__status-value">
                 {telemetry.fuel.toFixed(1)}L
               </span>
             </div>
             <div>
-              <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>ERS:</span>
-              <span style={{ fontSize: '1.125rem', marginLeft: '4px' }}>
+              <span className="test-component__status-label">ERS:</span>
+              <span className="test-component__status-value">
                 {telemetry.ers.toFixed(1)}%
               </span>
             </div>
             <div>
-              <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>DRS:</span>
-              <span style={{ 
-                fontSize: '1.125rem', 
-                marginLeft: '4px',
-                color: telemetry.drs ? '#10b981' : '#ef4444'
-              }}>
+              <span className="test-component__status-label">DRS:</span>
+              <span className={`test-component__status-value ${
+                telemetry.drs ? 'test-component__drs--on' : 'test-component__drs--off'
+              }`}>
                 {telemetry.drs ? 'ON' : 'OFF'}
               </span>
             </div>
             <div>
-              <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>Pos:</span>
-              <span style={{ fontSize: '1.125rem', marginLeft: '4px' }}>
+              <span className="test-component__status-label">Pos:</span>
+              <span className="test-component__status-value">
                 P{telemetry.position}
               </span>
             </div>

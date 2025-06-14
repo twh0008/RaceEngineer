@@ -4,6 +4,7 @@ import { useElectron } from "../../hooks/useElectron";
 import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
 import { OverlayConfigPanel } from "./OverlayConfigPanel";
 import dragHandle from "../../assets/drag-handle.svg";
+import "./styles/ControlPanel.css";
 
 interface OverlayConfigExtended extends OverlayConfig {
   config: {
@@ -158,76 +159,25 @@ export const ControlPanel = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "fit-content",
-        maxHeight: "fit-content",
-        backgroundColor: "#111827",
-        color: "white",
-        padding: "0", 
-        margin: "0",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        border: "none",
-        borderRadius: "0",
-        boxSizing: "border-box"
-      }}
-    >
+    <div className="control-panel">
       {/* Add draggable title bar */}
-      <div
-        className="titlebar"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "8px 16px",
-          backgroundColor: "#0f172a",
-          borderBottom: "1px solid #1f2937",
-          width: "100%"
-        }}
-      >
+      <div className="titlebar">
         <img
           src={dragHandle}
           alt="Drag"
-          style={{ width: "16px", marginRight: "8px" }}
+          className="titlebar-icon"
         />
-        <h1
-          style={{
-            fontSize: "1.25rem",
-            fontWeight: "bold",
-            margin: "0",
-          }}
-        >
+        <h1 className="titlebar-heading">
           Race Engineer Control Panel
         </h1>
       </div>
 
-      <div style={{ 
-        padding: "16px", 
-        flexGrow: 1,
-        overflow: "auto",
-        width: "100%"
-      }}>
-        <div
-          style={{
-            backgroundColor: "#1f2937",
-            padding: "24px",
-            borderRadius: "8px",
-            marginBottom: "24px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <h3 style={{ fontWeight: "bold" }}>
-                Session Status: {isConnected ? "Active" : "Inactive"}
-              </h3>
-              <p style={{ color: "#9ca3af", fontSize: "0.875rem" }}>
+      <div className="panel-content">
+        <div className="status-card">
+          <div className="status-header">
+            <div className="status-info">
+              <h3>Session Status: {isConnected ? "Active" : "Inactive"}</h3>
+              <p>
                 {isConnected
                   ? `Running ${enabledCount} overlay${
                       enabledCount !== 1 ? "s" : ""
@@ -238,24 +188,13 @@ export const ControlPanel = () => {
               </p>
             </div>
             <button
-              style={{
-                backgroundColor:
-                  enabledCount === 0 || !window.electronAPI
-                    ? "#6b7280"
-                    : isConnected
-                    ? "#ef4444"
-                    : "#059669",
-                color: "white",
-                padding: "12px 24px",
-                borderRadius: "8px",
-                border: "none",
-                cursor:
-                  enabledCount === 0 || !window.electronAPI
-                    ? "not-allowed"
-                    : "pointer",
-                fontSize: "1rem",
-                fontWeight: "bold",
-              }}
+              className={`session-button ${
+                enabledCount === 0 || !window.electronAPI
+                  ? "session-button--disabled"
+                  : isConnected
+                  ? "session-button--stop"
+                  : "session-button--start"
+              }`}
               disabled={enabledCount === 0 || !window.electronAPI}
               onClick={isConnected ? stopSession : startSession}
             >
@@ -267,7 +206,7 @@ export const ControlPanel = () => {
             </button>
           </div>
         </div>
-        <div style={{ display: "flex", gap: "24px", minHeight: "600px" }}>
+        <div className="panel-layout">
           {/* Left Panel - Overlay Selection */}
           <OverlaySelectionPanel
             overlays={overlays}

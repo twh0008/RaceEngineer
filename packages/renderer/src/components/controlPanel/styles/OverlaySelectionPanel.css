@@ -1,0 +1,73 @@
+.overlay-selection-panel {
+  width: 33.333333%;
+  background-color: #1f2937;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.overlay-selection-panel__heading {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.overlay-selection-panel__loading {
+  color: #9ca3af;
+}
+
+.overlay-selection-panel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.overlay-selection-panel__item {
+  padding: 16px;
+  background-color: #374151;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.overlay-selection-panel__item--selected {
+  background-color: #1e40af;
+  border: 2px solid #3b82f6;
+}
+
+.overlay-selection-panel__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.overlay-selection-panel__item-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.overlay-selection-panel__item-title {
+  font-weight: bold;
+}
+
+.overlay-selection-panel__enabled-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+}
+
+.overlay-selection-panel__item-description {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.overlay-selection-panel__item-size {
+  color: #6b7280;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.overlay-selection-panel__arrow {
+  color: #9ca3af;
+}

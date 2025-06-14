@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './styles/InputTelemetry.css';
 
 interface InputData {
   throttle: number;
@@ -28,58 +29,21 @@ export const InputTelemetry = () => {
 
     return () => clearInterval(interval);
   }, []);
-  const containerStyle = {
-    position: 'fixed' as const,
-    top: '0',
-    left: '0',
-    right: '0',
-    bottom: '0',
-    pointerEvents: 'auto' as const,
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    color: 'white',
-    padding: '16px',
-    borderRadius: '8px',
-    border: '1px solid #374151',
-    cursor: 'move',
-    userSelect: 'none' as const,
-    WebkitAppRegion: 'drag' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '300px',
-    height: 'fit-content',
-    margin: 'auto'
-  };
-  const InputBar = ({ label, value, color }: {
+  const InputBar = ({ label, value, type }: {
     label: string;
     value: number;
-    color: string;
+    type: 'throttle' | 'brake' | 'clutch';
   }) => (
-    <div style={{ marginBottom: '12px' }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginBottom: '4px' 
-      }}>
-        <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{label}</span>
-        <span style={{ fontSize: '0.75rem', color: 'white' }}>{value.toFixed(0)}%</span>
+    <div className="input-bar">
+      <div className="input-bar__header">
+        <span className="input-bar__label">{label}</span>
+        <span className="input-bar__value">{value.toFixed(0)}%</span>
       </div>
-      <div style={{ 
-        width: '100%', 
-        backgroundColor: '#374151', 
-        borderRadius: '4px', 
-        height: '8px',
-        position: 'relative'
-      }}>
+      <div className="input-bar__track">
         <div
+          className={`input-bar__indicator input-bar__indicator--${type}`}
           style={{
-            height: '8px',
-            borderRadius: '4px',
-            backgroundColor: color,
-            width: `${Math.abs(value)}%`,
-            transition: 'width 0.1s ease'
+            width: `${Math.abs(value)}%`
           }}
         />
       </div>
@@ -87,44 +51,20 @@ export const InputTelemetry = () => {
   );
 
   const SteeringBar = ({ value }: { value: number }) => (
-    <div style={{ marginBottom: '12px' }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginBottom: '4px' 
-      }}>
-        <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Steering</span>
-        <span style={{ fontSize: '0.75rem', color: 'white' }}>{value.toFixed(0)}%</span>
+    <div className="steering-bar">
+      <div className="steering-bar__header">
+        <span className="steering-bar__label">Steering</span>
+        <span className="steering-bar__value">{value.toFixed(0)}%</span>
       </div>
-      <div style={{ 
-        width: '100%', 
-        backgroundColor: '#374151', 
-        borderRadius: '4px', 
-        height: '8px',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center'
-      }}>
+      <div className="steering-bar__track">
         {/* Center line */}
-        <div style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '2px',
-          height: '8px',
-          backgroundColor: '#6b7280'
-        }} />
+        <div className="steering-bar__center" />
         {/* Steering indicator */}
         <div
+          className="steering-bar__indicator"
           style={{
-            position: 'absolute',
             left: value >= 0 ? '50%' : `${50 + value}%`,
-            width: `${Math.abs(value) / 2}%`,
-            height: '8px',
-            borderRadius: '4px',
-            backgroundColor: '#3b82f6',
-            transition: 'all 0.1s ease'
+            width: `${Math.abs(value) / 2}%`
           }}
         />
       </div>
@@ -132,21 +72,21 @@ export const InputTelemetry = () => {
   );
 
   return (
-    <div style={containerStyle}>
-      <h3 style={{ marginBottom: '16px', fontSize: '1.125rem', fontWeight: 'bold' }}>
+    <div className="input-telemetry">
+      <h3 className="input-telemetry__title">
         Input Telemetry
       </h3>
       
       <InputBar 
         label="Throttle" 
         value={inputs.throttle} 
-        color="#10b981" 
+        type="throttle" 
       />
       
       <InputBar 
         label="Brake" 
         value={inputs.brake} 
-        color="#ef4444" 
+        type="brake" 
       />
       
       <SteeringBar value={inputs.steering} />
@@ -154,7 +94,7 @@ export const InputTelemetry = () => {
       <InputBar 
         label="Clutch" 
         value={inputs.clutch} 
-        color="#f59e0b" 
+        type="clutch" 
       />
     </div>
   );

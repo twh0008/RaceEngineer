@@ -1,0 +1,126 @@
+.input-telemetry {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  cursor: move;
+  user-select: none;
+  -webkit-app-region: drag;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: fit-content;
+  margin: auto;
+}
+
+.input-telemetry__title {
+  margin-bottom: 16px;
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.input-bar {
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.input-bar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.input-bar__label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.input-bar__value {
+  font-size: 0.75rem;
+  color: white;
+}
+
+.input-bar__track {
+  width: 100%;
+  background-color: #374151;
+  border-radius: 4px;
+  height: 8px;
+  position: relative;
+}
+
+.input-bar__indicator {
+  height: 8px;
+  border-radius: 4px;
+  transition: width 0.1s ease;
+}
+
+.input-bar__indicator--throttle {
+  background-color: #10b981;
+}
+
+.input-bar__indicator--brake {
+  background-color: #ef4444;
+}
+
+.input-bar__indicator--clutch {
+  background-color: #f59e0b;
+}
+
+.steering-bar {
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.steering-bar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.steering-bar__label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.steering-bar__value {
+  font-size: 0.75rem;
+  color: white;
+}
+
+.steering-bar__track {
+  width: 100%;
+  background-color: #374151;
+  border-radius: 4px;
+  height: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.steering-bar__center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background-color: #6b7280;
+}
+
+.steering-bar__indicator {
+  position: absolute;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #3b82f6;
+  transition: all 0.1s ease;
+}

@@ -1,0 +1,159 @@
+.track-position {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: auto;
+  cursor: move;
+  user-select: none;
+  -webkit-app-region: drag;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 350px;
+  margin: auto;
+}
+
+.track-position__overlay {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  border: 1px solid #374151;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.track-position__header {
+  background-color: #1f2937;
+  padding: 8px 12px;
+  border-bottom: 1px solid #374151;
+  margin-bottom: 10px;
+}
+
+.track-position__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.track-position__lap {
+  color: #3b82f6;
+}
+
+.track-position__svg-container {
+  width: 100%;
+  height: 220px;
+  position: relative;
+}
+
+.track-position__track {
+  fill: none;
+  stroke: #6B7280;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.track-position__sector {
+  fill: none;
+  stroke-width: 2;
+  stroke-opacity: 0.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.track-position__car {
+  fill: #3b82f6;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.track-position__car-direction {
+  fill: none;
+  stroke: #3b82f6;
+  stroke-width: 1;
+  stroke-dasharray: 2,2;
+}
+
+.track-position__corner {
+  fill: #F59E0B;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.track-position__corner--active {
+  fill: #FFC107;
+  opacity: 1;
+}
+
+.track-position__corner-tooltip {
+  fill: rgba(0,0,0,0.8);
+}
+
+.track-position__corner-name {
+  fill: white;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.track-position__corner-description {
+  fill: #9CA3AF;
+  font-size: 8px;
+}
+
+.track-position__drs-zone {
+  stroke: #22D3EE;
+  stroke-width: 3;
+  stroke-dasharray: 4,4;
+  stroke-opacity: 0.8;
+}
+
+.track-position__drs-label {
+  fill: #22D3EE;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.track-position__info {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: white;
+  width: 120px;
+}
+
+.track-position__info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.track-position__info-row:last-child {
+  margin-bottom: 0;
+}
+
+.track-position__info-value {
+  font-weight: bold;
+}
+
+.track-position__sector-1 {
+  color: #4CAF50;
+}
+
+.track-position__sector-2 {
+  color: #FFC107;
+}
+
+.track-position__sector-3 {
+  color: #F44336;
+}
