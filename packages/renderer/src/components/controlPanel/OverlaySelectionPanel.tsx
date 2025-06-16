@@ -1,18 +1,8 @@
-import type { OverlayConfig } from '../../types/overlays';
 import './styles/OverlaySelectionPanel.css';
-
-interface OverlayConfigExtended extends OverlayConfig {
-  config: {
-    textColor: string;
-    backgroundColor: string;
-    opacity: number;
-    fontSize: number;
-    updateRate: number;
-  };
-}
+import { type OverlayCustomization } from '../../types/overlays';
 
 interface OverlaySelectionPanelProps {
-  overlays: OverlayConfigExtended[];
+  overlays: OverlayCustomization[];
   selectedOverlay: string | null;
   onSelectOverlay: (overlayId: string) => void;
   onToggleOverlay: (overlayId: string) => void;
@@ -31,38 +21,38 @@ export const OverlaySelectionPanel = ({
 
   return (
     <div className="overlay-selection-panel">
-      <h2 className="overlay-selection-panel__heading">
+      <h2 className="heading">
         Available Overlays ({overlays.length})
       </h2>
       {overlays.length === 0 ? (
-        <p className="overlay-selection-panel__loading">Loading overlays...</p>
+        <p className="loading">Loading overlays...</p>
       ) : (
-        <div className="overlay-selection-panel__list">
+        <div className="list">
           {overlays.map((overlay) => (            <div
               key={overlay.id}
-              className={`overlay-selection-panel__item ${
-                selectedOverlay === overlay.id ? 'overlay-selection-panel__item--selected' : ''
+              className={`item ${
+                selectedOverlay === overlay.id ? 'item--selected' : ''
               } ${
-                overlay.enabled ? 'overlay-selection-panel__item--enabled' : ''
+                overlay.enabled ? 'item--enabled' : ''
               }`}
               onClick={() => onSelectOverlay(overlay.id)}
             >
-              <div className="overlay-selection-panel__item-header">
+              <div className="item-header">
                 <div>
-                  <div className="overlay-selection-panel__item-content">
-                    <h3 className="overlay-selection-panel__item-title">{overlay.name}</h3>
+                  <div className="item-content">
+                    <h3 className="item-title">{overlay.name}</h3>
                     {overlay.enabled && (
-                      <div className="overlay-selection-panel__enabled-indicator"></div>
+                      <div className="enabled-indicator"></div>
                     )}
                   </div>
-                  <p className="overlay-selection-panel__item-description">
+                  <p className="item-description">
                     {overlay.description}
                   </p>
-                  <p className="overlay-selection-panel__item-size">
+                  <p className="item-size">
                     {overlay.size?.width}×{overlay.size?.height}px
                   </p>
                 </div>
-                <div className="overlay-selection-panel__controls">
+                <div className="controls">
                   <label className="toggle-switch">
                     <input 
                       type="checkbox" 
@@ -72,7 +62,7 @@ export const OverlaySelectionPanel = ({
                     />
                     <span className="toggle-slider"></span>
                   </label>
-                  <span className="overlay-selection-panel__arrow">→</span>
+                  <span className="arrow">→</span>
                 </div>
               </div>
             </div>

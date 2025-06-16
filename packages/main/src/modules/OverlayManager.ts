@@ -1,16 +1,11 @@
 import type {AppModule} from '../AppModule.js';
 import {ModuleContext} from '../ModuleContext.js';
-import {BrowserWindow, ipcMain} from 'electron';
+import {BrowserWindow} from 'electron';
 import type {AppInitConfig} from '../AppInitConfig.js';
 import * as fs from 'fs';
 import * as path from 'path';
-
-interface OverlayConfig {
-  id: string;
-  size: { width: number; height: number };
-  position?: { x: number; y: number };
-  anchorMode?: boolean;
-}
+import { setupOverlayIpcHandlers, removeOverlayIpcHandlers } from './IpcHandler.js';
+import type {OverlayConfig} from '../../../../packages/renderer/src/types/overlays.ts';
 
 class OverlayManager implements AppModule {
   readonly #preload: {path: string};
@@ -53,76 +48,18 @@ class OverlayManager implements AppModule {
   }
   
   private setupIpcHandlers(): void {
-    console.log('Setting up IPC handlers for overlay management');
+    // Use method binding to ensure 'this' context is preserved
+    const boundMethods = {
+      createOverlay: this.createOverlay.bind(this),
+      closeOverlay: this.closeOverlay.bind(this),
+      closeAllOverlays: this.closeAllOverlays.bind(this),
+      updateOverlayProperties: this.updateOverlayProperties.bind(this),
+      loadOverlayPositions: this.loadOverlayPositions.bind(this),
+      saveOverlayPositions: this.saveOverlayPositions.bind(this),
+      getOverlayPosition: this.getOverlayPosition.bind(this)
+    };
     
-    ipcMain.handle('toggle-click-through', (_event, enabled: boolean) => {
-      console.log('Toggle click-through:', enabled);
-      if (this.#mainWindow) {
-        this.#mainWindow.setIgnoreMouseEvents(enabled);
-      }
-    });
-
-    ipcMain.handle('get-window-bounds', () => {
-      const bounds = this.#mainWindow ? this.#mainWindow.getBounds() : null;
-      console.log('Get window bounds:', bounds);
-      return bounds;
-    });
-
-    ipcMain.handle('create-overlay', async (_event, overlayConfig: OverlayConfig) => {
-      console.log('IPC: create-overlay called with:', overlayConfig);
-      try {
-        const result = await this.createOverlay(overlayConfig);
-        console.log('IPC: create-overlay result:', result);
-        return result;
-      } catch (error) {
-        console.error('IPC: create-overlay error:', error);
-        throw error;
-      }
-    });
-
-    ipcMain.handle('close-overlay', (_event, overlayId: string) => {
-      console.log('IPC: close-overlay called with:', overlayId);
-      return this.closeOverlay(overlayId);
-    });
-
-    ipcMain.handle('close-all-overlays', () => {
-      console.log('IPC: close-all-overlays called');
-      return this.closeAllOverlays();
-    });
-    
-    // New handler for updating overlay properties
-    ipcMain.handle('update-overlay-properties', async (_event, overlayConfig: OverlayConfig) => {
-      console.log('IPC: update-overlay-properties called with:', overlayConfig);
-      try {
-        const result = await this.updateOverlayProperties(overlayConfig);
-        console.log('IPC: update-overlay-properties result:', result);
-        return result;
-      } catch (error) {
-        console.error('IPC: update-overlay-properties error:', error);
-        throw error;
-      }
-    });
-    
-    // Handlers for overlay positioning
-    ipcMain.handle('get-overlay-position', (_event, overlayId: string) => {
-      console.log('IPC: get-overlay-position called with:', overlayId);
-      const window = this.#overlayWindows.get(overlayId);
-      if (window) {
-        const bounds = window.getBounds();
-        return { x: bounds.x, y: bounds.y };
-      }
-      return null;
-    });
-    
-    ipcMain.handle('save-overlay-positions', (_event, positions: Record<string, { x: number; y: number }>) => {
-      console.log('IPC: save-overlay-positions called with:', positions);
-      return this.saveOverlayPositions(positions);
-    });
-    
-    ipcMain.handle('load-overlay-positions', () => {
-      console.log('IPC: load-overlay-positions called');
-      return this.loadOverlayPositions();
-    });
+    setupOverlayIpcHandlers(boundMethods, () => this.#mainWindow);
   }
   
   private async updateOverlayProperties(overlayConfig: OverlayConfig): Promise<string> {
@@ -357,6 +294,23 @@ class OverlayManager implements AppModule {
       console.error('Failed to load overlay positions:', error);
     }
     return {};
+  }
+
+  getOverlayPosition(overlayId: string): { x: number; y: number } | null {
+    const window = this.#overlayWindows.get(overlayId);
+    if (window) {
+      const bounds = window.getBounds();
+      return { x: bounds.x, y: bounds.y };
+    }
+    return null;
+  }
+
+  async disable(): Promise<void> {
+    // Clean up IPC handlers
+    removeOverlayIpcHandlers();
+    
+    // Close all overlay windows
+    this.closeAllOverlays();
   }
 }
 

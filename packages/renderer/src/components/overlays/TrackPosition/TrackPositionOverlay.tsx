@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import './styles/TrackPositionOverlay.css';
+import './TrackPositionOverlay.css';
 
 interface TrackPositionProps {
   trackName?: string;
@@ -130,15 +130,15 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
   
   return (
     <div className="track-position">
-      <div className="track-position__overlay">
-        <div className="track-position__header">
-          <h3 className="track-position__title">
+      <div className="overlay">
+        <div className="header">
+          <h3 className="title">
             <span>Track Position - {trackName.toUpperCase()}</span>
-            <span className="track-position__lap">Lap {lapCount}</span>
+            <span className="lap">Lap {lapCount}</span>
           </h3>
         </div>
         
-        <div className="track-position__svg-container">
+        <div className="svg-container">
           <svg 
             viewBox="0 0 120 200" 
             style={{ width: '100%', height: '100%' }}
@@ -147,7 +147,7 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
             {/* Track outline */}
             <path
               d={trackPath}
-              className="track-position__track"
+              className="track"
             />
             
             {/* Track sectors (Spa-specific) */}
@@ -155,7 +155,7 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
               <path
                 key={`sector-${idx}`}
                 d={sector.path}
-                className="track-position__sector"
+                className="sector"
                 style={{ stroke: sector.color }}
               />
             ))}
@@ -165,7 +165,7 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
               cx={carCoordinates.x} 
               cy={carCoordinates.y} 
               r="5" 
-              className="track-position__car"
+              className="car"
             />
             
             {/* Direction arrow */}
@@ -173,7 +173,7 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
               cx={carCoordinates.x} 
               cy={carCoordinates.y} 
               r="10" 
-              className="track-position__car-direction"
+              className="car-direction"
             />
             
             {/* Corner markers for Spa */}
@@ -183,8 +183,8 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
                   cx={corner.x}
                   cy={corner.y}
                   r="4"
-                  className={`track-position__corner ${
-                    hoveredCorner === corner.name ? 'track-position__corner--active' : ''
+                  className={`corner ${
+                    hoveredCorner === corner.name ? 'corner--active' : ''
                   }`}
                   onMouseEnter={() => setHoveredCorner(corner.name)}
                   onMouseLeave={() => setHoveredCorner(null)}
@@ -197,19 +197,19 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
                       width="100"
                       height="40"
                       rx="5"
-                      className="track-position__corner-tooltip"
+                      className="corner-tooltip"
                     />
                     <text
                       x={corner.x + 15}
                       y={corner.y - 5}
-                      className="track-position__corner-name"
+                      className="corner-name"
                     >
                       {corner.name}
                     </text>
                     <text
                       x={corner.x + 15}
                       y={corner.y + 10}
-                      className="track-position__corner-description"
+                      className="corner-description"
                     >
                       {corner.description}
                     </text>
@@ -223,41 +223,41 @@ export const TrackPositionOverlay: React.FC<TrackPositionProps> = ({ trackName =
               <>
                 <path
                   d="M 46,48 L 66,64"
-                  className="track-position__drs-zone"
+                  className="drs-zone"
                 />
                 <path
                   d="M 36,184 L 16,156"
-                  className="track-position__drs-zone"
+                  className="drs-zone"
                 />
-                <text x="50" y="45" className="track-position__drs-label">DRS ZONE 1</text>
-                <text x="25" y="170" className="track-position__drs-label">DRS ZONE 2</text>
+                <text x="50" y="45" className="drs-label">DRS ZONE 1</text>
+                <text x="25" y="170" className="drs-label">DRS ZONE 2</text>
               </>
             )}
           </svg>
           
           {/* Track information tooltip */}
-          <div className="track-position__info">
-            <div className="track-position__info-row">
+          <div className="info">
+            <div className="info-row">
               <span>Track:</span>
-              <span className="track-position__info-value">{trackName.toUpperCase()}</span>
+              <span className="info-value">{trackName.toUpperCase()}</span>
             </div>
-            <div className="track-position__info-row">
+            <div className="info-row">
               <span>Lap:</span>
-              <span className="track-position__info-value">{lapCount}</span>
+              <span className="info-value">{lapCount}</span>
             </div>
-            <div className="track-position__info-row">
+            <div className="info-row">
               <span>Sector:</span>
-              <span className={`track-position__info-value track-position__sector-${currentSector}`}>
+              <span className={`info-value sector-${currentSector}`}>
                 {currentSector}
               </span>
             </div>
-            <div className="track-position__info-row">
+            <div className="info-row">
               <span>Speed:</span>
-              <span className="track-position__info-value">{carSpeed} km/h</span>
+              <span className="info-value">{carSpeed} km/h</span>
             </div>
-            <div className="track-position__info-row">
+            <div className="info-row">
               <span>Pos:</span>
-              <span className="track-position__info-value">{Math.floor(carPosition * 100)}%</span>
+              <span className="info-value">{Math.floor(carPosition * 100)}%</span>
             </div>
           </div>
         </div>

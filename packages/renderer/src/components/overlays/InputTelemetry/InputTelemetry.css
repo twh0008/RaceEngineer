@@ -1,32 +1,4 @@
-.input-telemetry {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: auto;
-  background-color: rgba(0, 0, 0, 0.85);
-  color: white;
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #374151;
-  cursor: move;
-  user-select: none;
-  -webkit-app-region: drag;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: fit-content;
-  margin: auto;
-}
-
-.input-telemetry__title {
-  margin-bottom: 16px;
-  font-size: 1.125rem;
-  font-weight: bold;
-}
+/* Component-specific styles that aren't in common.css */
 
 .input-bar {
   margin-bottom: 12px;

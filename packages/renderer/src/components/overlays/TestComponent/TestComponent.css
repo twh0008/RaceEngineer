@@ -16,7 +16,7 @@
   align-items: center;
 }
 
-.test-component__title-bar {
+.title-bar {
   height: 24px;
   background-color: rgba(31, 41, 55, 0.5);
   border-radius: 8px 8px 0 0;
@@ -28,7 +28,7 @@
   color: #d1d5db;
 }
 
-.test-component__content {
+.content {
   max-width: 1024px;
   margin: 0 auto;
   display: grid;
@@ -36,7 +36,7 @@
   gap: 8px;
 }
 
-.test-component__card {
+.card {
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
   padding: 12px;
@@ -44,14 +44,14 @@
   border: 1px solid #374151;
 }
 
-.test-component__speed {
+.speed {
   font-size: 2.5rem;
   font-weight: bold;
   min-width: 200px;
   text-align: left;
 }
 
-.test-component__rpm {
+.rpm {
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: 4px;
@@ -59,7 +59,7 @@
   text-align: left;
 }
 
-.test-component__gear {
+.gear {
   font-size: 1.875rem;
   font-weight: bold;
   margin-top: 4px;
@@ -67,57 +67,57 @@
   text-align: left;
 }
 
-.test-component__lap-times {
+.lap-times {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.test-component__lap-label {
+.lap-label {
   color: #9ca3af;
   font-size: 0.875rem;
 }
 
-.test-component__current-lap {
+.current-lap {
   font-size: 1.5rem;
   margin-left: 8px;
 }
 
-.test-component__last-lap {
+.last-lap {
   font-size: 1.25rem;
   margin-left: 8px;
 }
 
-.test-component__best-lap {
+.best-lap {
   font-size: 1.25rem;
   margin-left: 8px;
 }
 
-.test-component__best-label {
+.best-label {
   color: #a855f7;
   font-size: 0.875rem;
 }
 
-.test-component__status-grid {
+.status-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
 }
 
-.test-component__status-label {
+.status-label {
   color: #9ca3af;
   font-size: 0.875rem;
 }
 
-.test-component__status-value {
+.status-value {
   font-size: 1.125rem;
   margin-left: 4px;
 }
 
-.test-component__drs--on {
+.drs--on {
   color: #10b981;
 }
 
-.test-component__drs--off {
+.drs--off {
   color: #ef4444;
 }

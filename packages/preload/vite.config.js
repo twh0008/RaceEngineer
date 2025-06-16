@@ -28,6 +28,7 @@ export default /**
     reportCompressedSize: false,
   },
   plugins: [mockExposed(), handleHotReload()],
+
 });
 
 

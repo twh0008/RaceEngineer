@@ -5,22 +5,22 @@
   border-radius: 8px;
 }
 
-.overlay-selection-panel__heading {
+.heading {
   font-size: 1.5rem;
   margin-bottom: 16px;
 }
 
-.overlay-selection-panel__loading {
+.loading {
   color: #9ca3af;
 }
 
-.overlay-selection-panel__list {
+.list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.overlay-selection-panel__item {
+.item {
   padding: 16px;
   background-color: #374151;
   border-radius: 8px;
@@ -29,62 +29,62 @@
   transition: background-color 0.3s ease;
 }
 
-.overlay-selection-panel__item--selected {
+.item--selected {
   background-color: #1e40af;
   border: 2px solid #3b82f6;
 }
 
-.overlay-selection-panel__item--enabled {
+.item--enabled {
   background-color: rgba(16, 185, 129, 0.2); /* Green background with opacity */
 }
 
 /* If an item is both selected and enabled */
-.overlay-selection-panel__item--selected.overlay-selection-panel__item--enabled {
+.item--selected.item--enabled {
   background-color: #1e40af; /* Keep the selected color as priority */
   border: 2px solid #10b981; /* But use the green border */
 }
 
-.overlay-selection-panel__item-header {
+.item-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.overlay-selection-panel__item-content {
+.item-content {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.overlay-selection-panel__item-title {
+.item-title {
   font-weight: bold;
 }
 
-.overlay-selection-panel__enabled-indicator {
+.enabled-indicator {
   width: 8px;
   height: 8px;
   background-color: #10b981;
   border-radius: 50%;
 }
 
-.overlay-selection-panel__item-description {
+.item-description {
   color: #9ca3af;
   font-size: 0.875rem;
   margin-top: 4px;
 }
 
-.overlay-selection-panel__item-size {
+.item-size {
   color: #6b7280;
   font-size: 0.75rem;
   margin-top: 4px;
 }
 
-.overlay-selection-panel__arrow {
+.arrow {
   color: #9ca3af;
   margin-left: 12px;
 }
 
-.overlay-selection-panel__controls {
+.controls {
   display: flex;
   align-items: center;
 }

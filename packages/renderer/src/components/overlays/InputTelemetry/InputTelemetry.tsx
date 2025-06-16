@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './styles/InputTelemetry.css';
+import './InputTelemetry.css';
 
 interface InputData {
   throttle: number;
@@ -70,10 +70,9 @@ export const InputTelemetry = () => {
       </div>
     </div>
   );
-
   return (
-    <div className="input-telemetry">
-      <h3 className="input-telemetry__title">
+    <div className="overlay-base">
+      <h3 className="overlay-title">
         Input Telemetry
       </h3>
       

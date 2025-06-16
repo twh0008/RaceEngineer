@@ -1,0 +1,7 @@
+/* Styles specific to TyreWear component */
+
+.bar {
+  height: 16px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+}

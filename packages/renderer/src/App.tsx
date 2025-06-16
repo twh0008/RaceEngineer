@@ -1,9 +1,9 @@
 import { ControlPanel } from './components/controlPanel/ControlPanel'
-import { TyreWear } from './components/overlays/TyreWear'
-import { InputTelemetry } from './components/overlays/InputTelemetry'
-import { RelativeWidget } from './components/overlays/RelativeWidget'
-import { TestComponent } from './components/overlays/TestComponent'
-import { TrackPositionOverlay } from './components/overlays/TrackPositionOverlay'
+import { TyreWear } from './components/overlays/TyreWear/TyreWear'
+import { InputTelemetry } from './components/overlays/InputTelemetry/InputTelemetry'
+import { RelativeWidget } from './components/overlays/Relative/RelativeWidget'
+import { TestComponent } from './components/overlays/TestComponent/TestComponent'
+import { TrackPositionOverlay } from './components/overlays/TrackPosition/TrackPositionOverlay'
 import './App.css'
 
 function App() {

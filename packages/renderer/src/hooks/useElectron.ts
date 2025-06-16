@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { OverlayConfig } from '../types/overlays';
+import type { OverlayConfig } from '@/types/overlays';
 
 
 // Declare the electron API for TypeScript

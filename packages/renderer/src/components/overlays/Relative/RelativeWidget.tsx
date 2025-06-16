@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import './styles/RelativeWidget.css';
+import './RelativeWidget.css';
 
 interface RelativeData {
   position: number;
@@ -130,42 +130,42 @@ export const RelativeWidget = () => {
   }, [updatePositionDisplay]);
 
   const getGapClassName = (gap: string): string => {
-    if (gap.startsWith('+')) return 'relative-widget__gap--positive';
-    if (gap.startsWith('-')) return 'relative-widget__gap--negative';
-    return 'relative-widget__gap--neutral';
+    if (gap.startsWith('+')) return 'gap--positive';
+    if (gap.startsWith('-')) return 'gap--negative';
+    return 'gap--neutral';
   };
 
   return (
     <div className="relative-widget">
-      <div className="relative-widget__container">
-        <div className="relative-widget__header">
-          <h3 className="relative-widget__title">
+      <div className="container">
+        <div className="header">
+          <h3 className="title">
             Relative Positions
           </h3>
         </div>
         
-        <table className="relative-widget__table">
+        <table className="table">
           <tbody>
             {relativeData.map((driver, idx) => (
               <tr
                 key={driver.position}
-                className={`relative-widget__row ${
+                className={`row ${
                   driver.isPlayer 
-                    ? 'relative-widget__row--player' 
+                    ? 'row--player' 
                     : idx % 2 === 0 
-                      ? 'relative-widget__row--even' 
-                      : 'relative-widget__row--odd'
+                      ? 'row--even' 
+                      : 'row--odd'
                 }`}
               >
-                <td className="relative-widget__cell relative-widget__position">
+                <td className="cell position">
                   {driver.position}
                 </td>
-                <td className={`relative-widget__cell relative-widget__driver ${
-                  driver.isPlayer ? 'relative-widget__driver--player' : ''
+                <td className={`cell driver ${
+                  driver.isPlayer ? 'driver--player' : ''
                 }`}>
                   {driver.driver}
                 </td>
-                <td className={`relative-widget__cell relative-widget__gap ${getGapClassName(driver.gap)}`}>
+                <td className={`cell gap ${getGapClassName(driver.gap)}`}>
                   {driver.gap}
                 </td>
               </tr>

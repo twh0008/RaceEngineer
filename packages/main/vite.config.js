@@ -1,6 +1,7 @@
 import {getNodeMajorVersion} from '@app/electron-versions';
 import {spawn} from 'child_process';
 import electronPath from 'electron';
+import { resolve } from 'path';
 
 export default /**
  * @type {import('vite').UserConfig}
@@ -25,10 +26,14 @@ export default /**
     emptyOutDir: true,
     reportCompressedSize: false,
   },
+
   plugins: [
     handleHotReload(),
   ],
 });
+
+
+
 
 
 /**

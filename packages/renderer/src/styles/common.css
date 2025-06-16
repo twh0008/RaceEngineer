@@ -1,0 +1,166 @@
+/**
+ * Common styles for overlay components
+ */
+
+/* Base overlay container */
+.overlay-base {
+  /* Positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  /* Interaction */
+  pointer-events: auto;
+  cursor: move;
+  user-select: none;
+  -webkit-app-region: drag;
+  
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  
+  /* Appearance */
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  
+  /* Content */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Header/title styles */
+.overlay-title {
+  margin-bottom: 16px;
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+/* Content container */
+.overlay-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Grid layout */
+.overlay-grid {
+  display: grid;
+  grid-gap: 8px;
+}
+
+/* Two column grid */
+.overlay-grid--2col {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Three column grid */
+.overlay-grid--3col {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Container with a dark background */
+.overlay-section {
+  background-color: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+/* Value display */
+.overlay-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* Label display */
+.overlay-label {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* Colors */
+.color-green {
+  color: #10B981; /* Green 500 */
+}
+
+.color-yellow {
+  color: #F59E0B; /* Amber 500 */
+}
+
+.color-red {
+  color: #EF4444; /* Red 500 */
+}
+
+.color-blue {
+  color: #3B82F6; /* Blue 500 */
+}
+
+.color-purple {
+  color: #8B5CF6; /* Violet 500 */
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.m-auto {
+  margin: auto;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+
+.ml-2 {
+  margin-left: 8px;
+}
+
+.mr-2 {
+  margin-right: 8px;
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@app/types",
+  "version": "1.0.0",
+  "description": "Shared types for RaceEngineer",
+  "main": "common.js",
+  "types": "common.ts",
+  "type": "module"
+}

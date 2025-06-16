@@ -1,26 +1,16 @@
 import { useState, useEffect } from "react";
-import { AVAILABLE_OVERLAYS, type OverlayConfig } from "../../types/overlays";
-import { useElectron } from "../../hooks/useElectron";
-import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
-import { OverlayConfigPanel } from "./OverlayConfigPanel";
+import { AVAILABLE_OVERLAYS, type OverlayCustomization } from "../../types/overlays";
+import { useElectron } from "../..//hooks/useElectron";
 import dragHandle from "../../assets/drag-handle.svg";
 import anchorIcon from "../../assets/anchor-icon.svg";
+import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
+import { OverlayConfigPanel } from "./OverlayConfigPanel";
 import "./styles/ControlPanel.css";
 import "./styles/AnchorMode.css";
 
-interface OverlayConfigExtended extends OverlayConfig {
-  config: {
-    textColor: string;
-    backgroundColor: string;
-    opacity: number;
-    fontSize: number;
-    updateRate: number;
-  };
-  windowId?: string; // Track the overlay window ID
-}
 
 export const ControlPanel = () => {
-  const [overlays, setOverlays] = useState<OverlayConfigExtended[]>([]);
+  const [overlays, setOverlays] = useState<OverlayCustomization[]>([]);
   const [selectedOverlay, setSelectedOverlay] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isAnchorMode, setIsAnchorMode] = useState(false);
@@ -53,14 +43,12 @@ export const ControlPanel = () => {
               description: overlay.description,
               enabled: false,
               position: savedPosition || { x: 100, y: 100 },
-              size: overlay.defaultSize,
-              config: {
-                textColor: "#ffffff",
-                backgroundColor: "#1f2937",
-                opacity: 90,
-                fontSize: 14,
-                updateRate: 100,
-              },
+              size: overlay.size,
+              textColor: "#ffffff",
+              backgroundColor: "#1f2937",
+              opacity: 90,
+              fontSize: 14,
+              updateRate: 100,
             };
           });
           
@@ -80,14 +68,12 @@ export const ControlPanel = () => {
           description: overlay.description,
           enabled: false,
           position: { x: 100, y: 100 },
-          size: overlay.defaultSize,
-          config: {
-            textColor: "#ffffff",
-            backgroundColor: "#1f2937",
-            opacity: 90,
-            fontSize: 14,
-            updateRate: 100,
-          },
+          size: overlay.size,
+          textColor: "#ffffff",
+          backgroundColor: "#1f2937",
+          opacity: 90,
+          fontSize: 14,
+          updateRate: 100,
         }));
         
         console.log("Initial overlays (default):", initialOverlays);
@@ -218,23 +204,13 @@ export const ControlPanel = () => {
                 [key]: value as number,
               },
             };
-          } else {
-            return {
-              ...overlay,
-              config: {
-                ...overlay.config,
-                [key]: value,
-              },
-            };
           }
         }
         return overlay;
       })
     );
   };
-  const selectedOverlayData = selectedOverlay
-    ? overlays.find((o) => o.id === selectedOverlay)
-    : null;
+  const selectedOverlayData = overlays.find((o) => o.id === selectedOverlay);
   const enabledCount = overlays.filter((o) => o.enabled).length;    const startSession = async () => {
     console.log("Starting session...");
     

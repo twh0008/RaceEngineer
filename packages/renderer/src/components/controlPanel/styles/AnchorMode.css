@@ -1,4 +1,4 @@
-.anchor-mode-button {
+button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,33 +14,33 @@
   margin-left: 12px;
 }
 
-.anchor-mode-button:hover {
+button:hover {
   background-color: #4b5563;
 }
 
-.anchor-mode-button:active {
+button:active {
   transform: scale(0.98);
 }
 
-.anchor-mode-button:disabled {
+button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.anchor-mode-button--active {
+button--active {
   background-color: #10b981;
 }
 
-.anchor-mode-button--active:hover {
+button--active:hover {
   background-color: #059669;
 }
 
-.anchor-mode-button__icon {
+button__icon {
   width: 16px;
   height: 16px;
 }
 
-.anchor-mode-indicator {
+indicator {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,11 +53,11 @@
   font-weight: 500;
 }
 
-.anchor-mode-indicator__text {
+indicator__text {
   margin: 0;
 }
 
-.anchor-mode-help {
+help {
   margin-top: 8px;
   font-size: 0.875rem;
   color: #9ca3af;
