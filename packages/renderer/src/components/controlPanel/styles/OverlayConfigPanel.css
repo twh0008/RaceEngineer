@@ -47,48 +47,6 @@
   font-size: 0.875rem;
 }
 
-.config-panel-header__controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.config-panel-header__status {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.config-panel-header__status--enabled {
-  color: #10b981;
-}
-
-.config-panel-header__status--disabled {
-  color: #ef4444;
-}
-
-.config-panel-button {
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.config-panel-button:hover {
-  opacity: 0.8;
-}
-
-.config-panel-button--enable {
-  background-color: #10b981;
-}
-
-.config-panel-button--disable {
-  background-color: #ef4444;
-}
-
 .config-panel-sections {
   display: flex;
   flex-direction: column;

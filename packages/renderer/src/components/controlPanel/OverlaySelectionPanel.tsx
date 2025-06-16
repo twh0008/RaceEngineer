@@ -15,13 +15,20 @@ interface OverlaySelectionPanelProps {
   overlays: OverlayConfigExtended[];
   selectedOverlay: string | null;
   onSelectOverlay: (overlayId: string) => void;
+  onToggleOverlay: (overlayId: string) => void;
 }
 
 export const OverlaySelectionPanel = ({ 
   overlays, 
   selectedOverlay, 
-  onSelectOverlay 
+  onSelectOverlay,
+  onToggleOverlay
 }: OverlaySelectionPanelProps) => {
+  const handleToggleClick = (e: React.MouseEvent, overlayId: string) => {
+    e.stopPropagation(); // Prevent selection of the overlay when clicking the toggle
+    onToggleOverlay(overlayId);
+  };
+
   return (
     <div className="overlay-selection-panel">
       <h2 className="overlay-selection-panel__heading">
@@ -31,11 +38,12 @@ export const OverlaySelectionPanel = ({
         <p className="overlay-selection-panel__loading">Loading overlays...</p>
       ) : (
         <div className="overlay-selection-panel__list">
-          {overlays.map((overlay) => (
-            <div
+          {overlays.map((overlay) => (            <div
               key={overlay.id}
               className={`overlay-selection-panel__item ${
                 selectedOverlay === overlay.id ? 'overlay-selection-panel__item--selected' : ''
+              } ${
+                overlay.enabled ? 'overlay-selection-panel__item--enabled' : ''
               }`}
               onClick={() => onSelectOverlay(overlay.id)}
             >
@@ -54,7 +62,18 @@ export const OverlaySelectionPanel = ({
                     {overlay.size?.width}×{overlay.size?.height}px
                   </p>
                 </div>
-                <span className="overlay-selection-panel__arrow">→</span>
+                <div className="overlay-selection-panel__controls">
+                  <label className="toggle-switch">
+                    <input 
+                      type="checkbox" 
+                      checked={overlay.enabled}
+                      onChange={(e) => e.stopPropagation()} // Prevent selection when interacting with checkbox
+                      onClick={(e) => handleToggleClick(e, overlay.id)}
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <span className="overlay-selection-panel__arrow">→</span>
+                </div>
               </div>
             </div>
           ))}

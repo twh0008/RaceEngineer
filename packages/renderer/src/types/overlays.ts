@@ -5,6 +5,7 @@ export interface OverlayConfig {
   enabled: boolean;
   position?: { x: number; y: number };
   size?: { width: number; height: number };
+  anchorMode?: boolean;
 }
 
 export interface OverlayType {
