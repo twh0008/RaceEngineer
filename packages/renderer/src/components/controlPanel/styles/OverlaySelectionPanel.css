@@ -26,11 +26,22 @@
   border-radius: 8px;
   cursor: pointer;
   border: 2px solid transparent;
+  transition: background-color 0.3s ease;
 }
 
 .overlay-selection-panel__item--selected {
   background-color: #1e40af;
   border: 2px solid #3b82f6;
+}
+
+.overlay-selection-panel__item--enabled {
+  background-color: rgba(16, 185, 129, 0.2); /* Green background with opacity */
+}
+
+/* If an item is both selected and enabled */
+.overlay-selection-panel__item--selected.overlay-selection-panel__item--enabled {
+  background-color: #1e40af; /* Keep the selected color as priority */
+  border: 2px solid #10b981; /* But use the green border */
 }
 
 .overlay-selection-panel__item-header {
@@ -70,4 +81,70 @@
 
 .overlay-selection-panel__arrow {
   color: #9ca3af;
+  margin-left: 12px;
+}
+
+.overlay-selection-panel__controls {
+  display: flex;
+  align-items: center;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #4b5563;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #10b981;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(18px);
+}
+
+.toggle-switch:hover .toggle-slider {
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+input:focus + .toggle-slider {
+  box-shadow: 0 0 1px #10b981;
+}
+
+/* Add a disabled state for when the session is inactive */
+input:disabled + .toggle-slider {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
