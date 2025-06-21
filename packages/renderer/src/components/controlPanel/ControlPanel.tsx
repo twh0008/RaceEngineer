@@ -407,21 +407,22 @@ export const ControlPanel = () => {
           updateOverlayProperties={updateOverlayProperties}
           windowElectronAPI={window.electronAPI}
         />
-        </div><div className="panel-layout">
-          {/* Left Panel - Overlay Selection */}
-          <OverlaySelectionPanel
-            overlays={overlays}
-            selectedOverlay={selectedOverlay}
-            onSelectOverlay={setSelectedOverlay}
-            onToggleOverlay={toggleOverlay}
-          />
-
-          {/* Right Panel - Overlay Configuration */}
-          <OverlayConfigPanel
-            selectedOverlay={selectedOverlayData}
-            onUpdateConfig={updateOverlayConfig}
-          />
-        </div>
       </div>
+      <div className="panel-layout">
+        {/* Left Panel - Overlay Selection */}
+        <OverlaySelectionPanel
+          overlays={overlays}
+          selectedOverlay={selectedOverlay}
+          onSelectOverlay={setSelectedOverlay}
+          onToggleOverlay={toggleOverlay}
+        />
+
+        {/* Right Panel - Overlay Configuration */}
+        <OverlayConfigPanel
+          selectedOverlay={selectedOverlayData}
+          onUpdateConfig={updateOverlayConfig}
+        />
+      </div>
+    </div>
   );
 };
