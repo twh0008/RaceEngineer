@@ -65,12 +65,10 @@ export const StatusCardPanel: React.FC<StatusCardPanelProps> = ({
         </button>
       </div>
     </div>
-    {isAnchorMode && (
-      <div className="anchor-mode-indicator">
-        <p className="anchor-mode-indicator__text">
-          Anchor Mode Active: Position your overlays where you want them, then click "Save Positions"
-        </p>
-      </div>
-    )}
+    <div className={`anchor-mode-indicator${isAnchorMode ? '' : ' anchor-mode-indicator--hidden'}`}>
+      <p className="anchor-mode-indicator__text">
+        Anchor Mode Active: Position your overlays where you want them, then click "Save Positions"
+      </p>
+    </div>
   </div>
 );
