@@ -1,5 +1,5 @@
 .overlay-selection-panel {
-  width: 33.333333%;
+  flex: 1;
   background-color: #1f2937;
   padding: 24px;
   border-radius: 8px;

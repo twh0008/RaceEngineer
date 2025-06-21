@@ -1,6 +1,6 @@
 .status-card {
   background-color: #1f2937;
-  padding: 20px;
+  padding: 30px 24px;
   display: flex;
   flex-direction: column;
   max-width: 100%;
