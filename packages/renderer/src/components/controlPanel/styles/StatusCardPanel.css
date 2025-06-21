@@ -1,0 +1,75 @@
+.status-card {
+  background-color: #1f2937;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  gap: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-info h3 {
+  font-weight: bold;
+  margin: 0;
+}
+
+.status-info p {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.status-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.anchor-mode-indicator {
+  background: #047857;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.anchor-mode-indicator__text {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.anchor-mode-button {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.anchor-mode-button--active {
+  background-color: #10b981;
+}
+
+.anchor-mode-button__icon {
+  width: 18px;
+  height: 18px;
+}

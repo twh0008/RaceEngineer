@@ -1,5 +1,7 @@
 import React from "react";
 import type { OverlayConfig } from "../../types/overlays";
+import "./styles/AnchorMode.css";
+import "./styles/StatusCardPanel.css";
 
 interface StatusCardPanelProps {
   isConnected: boolean;
