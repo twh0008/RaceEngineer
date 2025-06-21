@@ -22,7 +22,7 @@ export const AVAILABLE_OVERLAYS: OverlayType[] = [
     name: 'Telemetry Dashboard',
     description: 'Main racing telemetry display with speed, gear, lap times',
     component: 'Dashboard',
-    defaultSize: { width: 400, height: 200 }
+    defaultSize: { width: 1000, height: 200 }
   },
   {
     id: 'tyre-wear',
