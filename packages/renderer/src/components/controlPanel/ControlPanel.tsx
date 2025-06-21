@@ -3,6 +3,7 @@ import { AVAILABLE_OVERLAYS, type OverlayConfig } from "../../types/overlays";
 import { useElectron } from "../../hooks/useElectron";
 import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
 import { OverlayConfigPanel } from "./OverlayConfigPanel";
+import { StatusCardPanel } from "./statusCardPanel";
 import dragHandle from "../../assets/drag-handle.svg";
 import anchorIcon from "../../assets/anchor-icon.svg";
 import "./styles/ControlPanel.css";
@@ -24,15 +25,18 @@ export const ControlPanel = () => {
   const [selectedOverlay, setSelectedOverlay] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isAnchorMode, setIsAnchorMode] = useState(false);
-  const [savedPositions, setSavedPositions] = useState<Record<string, { x: number; y: number }>>({});  const { 
-    createOverlay, 
-    closeOverlay, 
-    closeAllOverlays, 
+  const [savedPositions, setSavedPositions] = useState<Record<string, { x: number; y: number }>>({});
+  const {
+    createOverlay,
+    closeOverlay,
+    closeAllOverlays,
     getOverlayPosition, 
     saveOverlayPositions, 
     loadOverlayPositions,
     updateOverlayProperties
-  } = useElectron();useEffect(() => {
+  } = useElectron();
+
+  useEffect(() => {
     console.log("Available overlays:", AVAILABLE_OVERLAYS);
     
     // Load saved positions if available
@@ -366,9 +370,8 @@ export const ControlPanel = () => {
           const overlayWithUpdates = {
             ...overlay,
             anchorMode: newAnchorModeState,
-            position: newPositions[overlay.id] || overlay.position  // Use the updated positions
+            position: newPositions[overlay.id] || overlay.position
           };
-          
           await updateOverlayProperties(overlayWithUpdates);
           console.log(`Updated overlay ${overlay.name} with anchor mode ${newAnchorModeState} and position:`, newPositions[overlay.id] || overlay.position);
         } catch (error) {
@@ -390,59 +393,21 @@ export const ControlPanel = () => {
         <h1 className="titlebar-heading">
           Race Engineer Control Panel
         </h1>
-      </div>      <div className="panel-content">
-        <div className="status-card">
-          <div className="status-header">
-            <div className="status-info">
-              <h3>Session Status: {isConnected ? "Active" : "Inactive"}</h3>
-              <p>
-                {isConnected
-                  ? `Running ${enabledCount} overlay${
-                      enabledCount !== 1 ? "s" : ""
-                    }`
-                  : `${enabledCount} overlay${
-                      enabledCount !== 1 ? "s" : ""
-                    } ready to start`}
-              </p>
-            </div>
-            <div className="status-controls">
-              <button
-                className={`session-button ${
-                  enabledCount === 0 || !window.electronAPI
-                    ? "session-button--disabled"
-                    : isConnected
-                    ? "session-button--stop"
-                    : "session-button--start"
-                }`}
-                disabled={enabledCount === 0 || !window.electronAPI}
-                onClick={isConnected ? stopSession : startSession}
-              >
-                {!window.electronAPI
-                  ? "Electron Required"
-                  : isConnected
-                  ? "Stop Session"
-                  : "Start Session"}
-              </button>
-              {isConnected && (
-                <button
-                  className={`anchor-mode-button ${isAnchorMode ? 'anchor-mode-button--active' : ''}`}
-                  onClick={toggleAnchorMode}
-                >
-                  <img src={anchorIcon} alt="Anchor" className="anchor-mode-button__icon" />
-                  {isAnchorMode ? "Save Positions" : "Position Overlays"}
-                </button>
-              )}
-            </div>
-          </div>
-          
-          {isAnchorMode && (
-            <div className="anchor-mode-indicator">
-              <p className="anchor-mode-indicator__text">
-                Anchor Mode Active: Position your overlays where you want them, then click "Save Positions"
-              </p>
-            </div>
-          )}
-        </div><div className="panel-layout">
+      </div>      
+      <div className="panel-content">
+        <StatusCardPanel
+          isConnected={isConnected}
+          enabledCount={enabledCount}
+          isAnchorMode={isAnchorMode}
+          anchorIcon={anchorIcon}
+          toggleAnchorMode={toggleAnchorMode}
+          stopSession={stopSession}
+          startSession={startSession}
+          overlays={overlays}
+          updateOverlayProperties={updateOverlayProperties}
+          windowElectronAPI={window.electronAPI}
+        />
+        <div className="panel-layout">
           {/* Left Panel - Overlay Selection */}
           <OverlaySelectionPanel
             overlays={overlays}
