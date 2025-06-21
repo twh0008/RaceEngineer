@@ -8,6 +8,7 @@ import dragHandle from "../../assets/drag-handle.svg";
 import anchorIcon from "../../assets/anchor-icon.svg";
 import "./styles/ControlPanel.css";
 import "./styles/AnchorMode.css";
+import { initIracingSdk, getIracingStatus } from '../../sdk/iracing-sdk-js-init';
 
 interface OverlayConfigExtended extends OverlayConfig {
   config: {
@@ -26,6 +27,7 @@ export const ControlPanel = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isAnchorMode, setIsAnchorMode] = useState(false);
   const [savedPositions, setSavedPositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [isIracingConnected, setIsIracingConnected] = useState(false);
   const {
     createOverlay,
     closeOverlay,
@@ -381,6 +383,22 @@ export const ControlPanel = () => {
     }
   };
 
+  useEffect(() => {
+    // Initialize iRacing SDK
+    console.log("Initializing iRacing SDK...");
+    initIracingSdk();
+    console.log("iRacing SDK initialized");
+    // Set up interval to check iRacing connection status
+
+    const interval = setInterval(() => {
+      setIsIracingConnected(getIracingStatus());
+    }, 1000);
+    console.log("iRacing connection status check interval set");
+    // Cleanup interval on unmount
+    console.log("Setting up cleanup for iRacing connection status check interval");
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="control-panel">
       {/* Add draggable title bar */}
@@ -406,6 +424,8 @@ export const ControlPanel = () => {
           overlays={overlays}
           updateOverlayProperties={updateOverlayProperties}
           windowElectronAPI={window.electronAPI}
+          isIracingConnected={isIracingConnected}
+          iracingSdk={initIracingSdk()}
         />
         <div className="panel-layout">
           {/* Left Panel - Overlay Selection */}
