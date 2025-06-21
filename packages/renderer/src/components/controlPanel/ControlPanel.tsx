@@ -3,7 +3,7 @@ import { AVAILABLE_OVERLAYS, type OverlayConfig } from "../../types/overlays";
 import { useElectron } from "../../hooks/useElectron";
 import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
 import { OverlayConfigPanel } from "./OverlayConfigPanel";
-import { StatusCardPanel } from "./statusCardPanel";
+import { StatusCardPanel } from "./StatusCardPanel";
 import dragHandle from "../../assets/drag-handle.svg";
 import anchorIcon from "../../assets/anchor-icon.svg";
 import "./styles/ControlPanel.css";
