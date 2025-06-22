@@ -14,6 +14,7 @@ interface StatusCardPanelProps {
   overlays: any[];
   updateOverlayProperties?: (overlayConfig: OverlayConfig) => Promise<string>;
   windowElectronAPI: any;
+  isIracingConnected?: boolean;
 }
 
 export const StatusCardPanel: React.FC<StatusCardPanelProps> = ({
@@ -25,6 +26,7 @@ export const StatusCardPanel: React.FC<StatusCardPanelProps> = ({
   stopSession,
   startSession,
   windowElectronAPI,
+  isIracingConnected,
 }) => (
   <div className="status-card">
     <div className="status-header">
@@ -35,6 +37,12 @@ export const StatusCardPanel: React.FC<StatusCardPanelProps> = ({
             ? `Running ${enabledCount} overlay${enabledCount !== 1 ? "s" : ""}`
             : `${enabledCount} overlay${enabledCount !== 1 ? "s" : ""} ready to start`}
         </p>
+        {/* iRacing SDK Status */}
+        <div className="iracing-sdk-status">
+          <span>
+            iRacing: {isIracingConnected ? "Connected" : "Not Connected"}
+          </span>
+        </div>
       </div>
       <div className="status-controls">
         {isConnected && (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AVAILABLE_OVERLAYS, type OverlayConfig } from "../../types/overlays";
 import { useElectron } from "../../hooks/useElectron";
 import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
@@ -26,6 +26,7 @@ export const ControlPanel = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isAnchorMode, setIsAnchorMode] = useState(false);
   const [savedPositions, setSavedPositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [isIracingConnected, setIsIracingConnected] = useState(false);
   const {
     createOverlay,
     closeOverlay,
@@ -381,6 +382,26 @@ export const ControlPanel = () => {
     }
   };
 
+  // Poll iRacing connection status from main process via IPC
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (window.electronAPI && window.electronAPI.getIracingStatus) {
+      interval = setInterval(async () => {
+        try {
+          const status = await window.electronAPI.getIracingStatus();
+          console.log('Polled iRacing status:', status);
+          setIsIracingConnected(!!status);
+        } catch (error) {
+          console.error('Failed to poll iRacing status:', error);
+          setIsIracingConnected(false);
+        }
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div className="control-panel">
       {/* Add draggable title bar */}
@@ -406,6 +427,7 @@ export const ControlPanel = () => {
           overlays={overlays}
           updateOverlayProperties={updateOverlayProperties}
           windowElectronAPI={window.electronAPI}
+          isIracingConnected={isIracingConnected}
         />
         <div className="panel-layout">
           {/* Left Panel - Overlay Selection */}

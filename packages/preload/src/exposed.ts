@@ -28,6 +28,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('save-overlay-positions', positions),
   loadOverlayPositions: () => ipcRenderer.invoke('load-overlay-positions'),
   updateOverlayProperties: (overlayConfig: OverlayConfig) => ipcRenderer.invoke('update-overlay-properties', overlayConfig),
+  getIracingStatus: () => ipcRenderer.invoke('iracing:getStatus'),
 });
 
 // Re-export for tests

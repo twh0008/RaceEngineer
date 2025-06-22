@@ -1,0 +1,3 @@
+[submodule "packages/iracing-sdk-js"]
+	path = packages/iracing-sdk-js
+	url = https://github.com/twh0008/iracing-sdk-js.git
