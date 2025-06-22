@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "author": {
-  },
+  "author": {},
   "main": "packages/entry-point.mjs",
   "workspaces": [
     "packages/*"
@@ -21,9 +20,11 @@
     "typecheck": "npm run typecheck -ws --if-present",
     "create-renderer": "cd packages && npm create vite@latest renderer",
     "integrate-renderer": "npm start --workspace @app/integrate-renderer",
-    "init": "npm run create-renderer && npm run integrate-renderer && npm install"
+    "init": "npm run create-renderer && npm run integrate-renderer && npm install",
+    "rebuild-native": "npm --workspace packages/iracing-sdk-js rebuild-electron && electron-rebuild"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.0.1",
     "@npmcli/map-workspaces": "4.0.2",
     "@playwright/test": "1.53.0",
     "@types/node": "24.0.1",
