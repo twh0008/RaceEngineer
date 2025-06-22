@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AVAILABLE_OVERLAYS, type OverlayConfig } from "../../types/overlays";
 import { useElectron } from "../../hooks/useElectron";
 import { OverlaySelectionPanel } from "./OverlaySelectionPanel";
@@ -8,7 +8,6 @@ import dragHandle from "../../assets/drag-handle.svg";
 import anchorIcon from "../../assets/anchor-icon.svg";
 import "./styles/ControlPanel.css";
 import "./styles/AnchorMode.css";
-import { initIracingSdk, getIracingStatus } from '../../sdk/iracing-sdk-js-init';
 
 interface OverlayConfigExtended extends OverlayConfig {
   config: {
@@ -383,20 +382,24 @@ export const ControlPanel = () => {
     }
   };
 
+  // Poll iRacing connection status from main process via IPC
   useEffect(() => {
-    // Initialize iRacing SDK
-    console.log("Initializing iRacing SDK...");
-    initIracingSdk();
-    console.log("iRacing SDK initialized");
-    // Set up interval to check iRacing connection status
-
-    const interval = setInterval(() => {
-      setIsIracingConnected(getIracingStatus());
-    }, 1000);
-    console.log("iRacing connection status check interval set");
-    // Cleanup interval on unmount
-    console.log("Setting up cleanup for iRacing connection status check interval");
-    return () => clearInterval(interval);
+    let interval: NodeJS.Timeout | null = null;
+    if (window.electronAPI && window.electronAPI.getIracingStatus) {
+      interval = setInterval(async () => {
+        try {
+          const status = await window.electronAPI.getIracingStatus();
+          console.log('Polled iRacing status:', status);
+          setIsIracingConnected(!!status);
+        } catch (error) {
+          console.error('Failed to poll iRacing status:', error);
+          setIsIracingConnected(false);
+        }
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -425,7 +428,6 @@ export const ControlPanel = () => {
           updateOverlayProperties={updateOverlayProperties}
           windowElectronAPI={window.electronAPI}
           isIracingConnected={isIracingConnected}
-          iracingSdk={initIracingSdk()}
         />
         <div className="panel-layout">
           {/* Left Panel - Overlay Selection */}

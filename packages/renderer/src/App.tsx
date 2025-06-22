@@ -79,8 +79,9 @@ function App() {
     );
   }
 
-  // Default: render the control panel
-  return <ControlPanel />
+  // Always render the ControlPanel regardless of overlay mode
+  console.log('App: Rendering ControlPanel');
+  return <ControlPanel />;
 }
 
-export default App
+export default App;
