@@ -411,6 +411,26 @@ export const ControlPanel = () => {
     };
   }, []);
 
+  // Poll iRacing connection status from main process via IPC
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (window.electronAPI && window.electronAPI.getIracingStatus) {
+      interval = setInterval(async () => {
+        try {
+          const status = await window.electronAPI.getIracingStatus();
+          console.log('Polled iRacing status:', status);
+          setIsIracingConnected(!!status);
+        } catch (error) {
+          console.error('Failed to poll iRacing status:', error);
+          setIsIracingConnected(false);
+        }
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div className="control-panel">
       {/* Add draggable title bar */}

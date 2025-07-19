@@ -60,6 +60,7 @@ ipcMain.handle('iracing:getStatus', () => {
 
 export async function initApp(initConfig: AppInitConfig) {
   initIracingSdk(); // Initialize SDK at app start
+  initIracingSdk(); // Initialize SDK at app start
   const moduleRunner = createModuleRunner()
     .init(
       createWindowManagerModule({
