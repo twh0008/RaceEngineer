@@ -21,17 +21,33 @@
     "create-renderer": "cd packages && npm create vite@latest renderer",
     "integrate-renderer": "npm start --workspace @app/integrate-renderer",
     "init": "npm run create-renderer && npm run integrate-renderer && npm install",
-    "rebuild-native": "npm --workspace packages/iracing-sdk-js rebuild-electron && electron-rebuild"
+    "rebuild-native": "npm --workspace packages/iracing-sdk-js rebuild-electron && electron-rebuild",
+    "prepare": "husky",
+    "lint:fix": "lint-staged",
+    "lint": "npx eslint . --ext .js,.ts,.tsx,.json"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --fix"
   },
   "devDependencies": {
     "@electron/rebuild": "^4.0.1",
     "@npmcli/map-workspaces": "4.0.2",
     "@playwright/test": "1.53.0",
     "@types/node": "24.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
     "electron": "36.4.0",
     "electron-builder": "26.0.12",
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "glob": "11.0.3",
-    "playwright": "^1.53.0"
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "playwright": "^1.53.0",
+    "prettier": "^3.6.2"
   },
   "dependencies": {
     "@app/main": "*"

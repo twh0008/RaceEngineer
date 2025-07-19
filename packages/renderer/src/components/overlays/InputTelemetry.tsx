@@ -13,7 +13,7 @@ export const InputTelemetry = () => {
     throttle: 0,
     brake: 0,
     steering: 0,
-    clutch: 0
+    clutch: 0,
   });
 
   useEffect(() => {
@@ -23,13 +23,17 @@ export const InputTelemetry = () => {
         throttle: Math.random() * 100,
         brake: Math.random() * 100,
         steering: (Math.random() - 0.5) * 100,
-        clutch: Math.random() * 100
+        clutch: Math.random() * 100,
       });
     }, 100);
 
     return () => clearInterval(interval);
   }, []);
-  const InputBar = ({ label, value, type }: {
+  const InputBar = ({
+    label,
+    value,
+    type,
+  }: {
     label: string;
     value: number;
     type: 'throttle' | 'brake' | 'clutch';
@@ -43,7 +47,7 @@ export const InputTelemetry = () => {
         <div
           className={`input-bar__indicator input-bar__indicator--${type}`}
           style={{
-            width: `${Math.abs(value)}%`
+            width: `${Math.abs(value)}%`,
           }}
         />
       </div>
@@ -64,7 +68,7 @@ export const InputTelemetry = () => {
           className="steering-bar__indicator"
           style={{
             left: value >= 0 ? '50%' : `${50 + value}%`,
-            width: `${Math.abs(value) / 2}%`
+            width: `${Math.abs(value) / 2}%`,
           }}
         />
       </div>
@@ -73,29 +77,15 @@ export const InputTelemetry = () => {
 
   return (
     <div className="input-telemetry">
-      <h3 className="input-telemetry__title">
-        Input Telemetry
-      </h3>
-      
-      <InputBar 
-        label="Throttle" 
-        value={inputs.throttle} 
-        type="throttle" 
-      />
-      
-      <InputBar 
-        label="Brake" 
-        value={inputs.brake} 
-        type="brake" 
-      />
-      
+      <h3 className="input-telemetry__title">Input Telemetry</h3>
+
+      <InputBar label="Throttle" value={inputs.throttle} type="throttle" />
+
+      <InputBar label="Brake" value={inputs.brake} type="brake" />
+
       <SteeringBar value={inputs.steering} />
-      
-      <InputBar 
-        label="Clutch" 
-        value={inputs.clutch} 
-        type="clutch" 
-      />
+
+      <InputBar label="Clutch" value={inputs.clutch} type="clutch" />
     </div>
   );
 };

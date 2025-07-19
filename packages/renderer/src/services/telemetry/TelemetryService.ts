@@ -1,4 +1,7 @@
-import type { TelemetryData, SimulatorEventHandler } from '../../types/telemetry';
+import type {
+  TelemetryData,
+  SimulatorEventHandler,
+} from '../../types/telemetry';
 
 class TelemetryService {
   private listeners: SimulatorEventHandler[] = [];
@@ -18,9 +21,9 @@ class TelemetryService {
         speed: Math.floor(Math.random() * 320),
         gear: Math.floor(Math.random() * 8),
         rpm: Math.floor(Math.random() * 12000),
-        lapTime: "1:34.567",
-        lastLap: "1:34.789",
-        bestLap: "1:33.456",
+        lapTime: '1:34.567',
+        lastLap: '1:34.789',
+        bestLap: '1:33.456',
         position: Math.floor(Math.random() * 20) + 1,
         fuel: 75 + Math.random() * 25,
         tyreWear: {
@@ -29,7 +32,7 @@ class TelemetryService {
           rearLeft: 90 + Math.random() * 10,
           rearRight: 90 + Math.random() * 10,
         },
-        delta: "+0.234",
+        delta: '+0.234',
         drs: Math.random() > 0.5,
         ers: Math.random() * 100,
       };
@@ -50,12 +53,12 @@ class TelemetryService {
   public subscribe(handler: SimulatorEventHandler) {
     this.listeners.push(handler);
     return () => {
-      this.listeners = this.listeners.filter(h => h !== handler);
+      this.listeners = this.listeners.filter((h) => h !== handler);
     };
   }
 
   private notifyListeners(data: TelemetryData) {
-    this.listeners.forEach(handler => handler(data));
+    this.listeners.forEach((handler) => handler(data));
   }
 }
 

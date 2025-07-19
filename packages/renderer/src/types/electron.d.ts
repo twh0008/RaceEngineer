@@ -6,6 +6,7 @@ interface OverlayConfig {
 
 interface ElectronAPI {
   toggleClickThrough: (enabled: boolean) => Promise<void>;
+
   getWindowBounds: () => Promise<Electron.Rectangle | null>;
   createOverlay: (overlayConfig: OverlayConfig) => Promise<string>;
   closeOverlay: (overlayId: string) => Promise<void>;
