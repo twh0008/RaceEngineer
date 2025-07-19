@@ -5,6 +5,7 @@ import type { OverlayConfig } from '../types/overlays';
 declare global {
   interface Window {
     electronAPI: {
+      getIracingStatus: () => Promise<boolean>;
       toggleClickThrough: (enabled: boolean) => Promise<void>;
       getWindowBounds: () => Promise<{
         x: number;
