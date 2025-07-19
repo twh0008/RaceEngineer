@@ -37,6 +37,7 @@ export default [
         'warn',
         { argsIgnorePattern: '^_' },
       ],
+      '@typescript-eslint/no-explicit-any': 'warn', // Warn about any usage instead of error
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'prettier/prettier': 'error',

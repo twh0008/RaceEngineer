@@ -13,9 +13,7 @@ import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
 const importedModule = require('../../iracing-sdk-js/src/iracing-sdk-js.js');
-
 let iracingInstance: any = null;
-
 let irsdk: any = importedModule.default || importedModule;
 let isIracingConnected: boolean = false;
 
