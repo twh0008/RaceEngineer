@@ -1,0 +1,5 @@
+# Run linting and formatting via package.json script
+npm run lint:fix
+
+# Run tests
+# npm run test
