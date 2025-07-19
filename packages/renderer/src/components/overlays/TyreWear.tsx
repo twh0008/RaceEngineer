@@ -23,12 +23,12 @@ export const TyreWear = ({ wear }: TyreWearProps) => {
         {/* Front Left */}
         <div className="tyre-wear__item">
           <div className="tyre-wear__label">FL</div>
-          <div 
+          <div
             className="tyre-wear__bar"
             style={{
               backgroundColor: getWearColor(wear.frontLeft),
-              width: `${wear.frontLeft}%`
-            }} 
+              width: `${wear.frontLeft}%`,
+            }}
           />
           <div className="tyre-wear__value">{wear.frontLeft.toFixed(1)}%</div>
         </div>
@@ -36,12 +36,12 @@ export const TyreWear = ({ wear }: TyreWearProps) => {
         {/* Front Right */}
         <div className="tyre-wear__item">
           <div className="tyre-wear__label">FR</div>
-          <div 
+          <div
             className="tyre-wear__bar"
             style={{
               backgroundColor: getWearColor(wear.frontRight),
-              width: `${wear.frontRight}%`
-            }} 
+              width: `${wear.frontRight}%`,
+            }}
           />
           <div className="tyre-wear__value">{wear.frontRight.toFixed(1)}%</div>
         </div>
@@ -49,12 +49,12 @@ export const TyreWear = ({ wear }: TyreWearProps) => {
         {/* Rear Left */}
         <div className="tyre-wear__item">
           <div className="tyre-wear__label">RL</div>
-          <div 
+          <div
             className="tyre-wear__bar"
             style={{
               backgroundColor: getWearColor(wear.rearLeft),
-              width: `${wear.rearLeft}%`
-            }} 
+              width: `${wear.rearLeft}%`,
+            }}
           />
           <div className="tyre-wear__value">{wear.rearLeft.toFixed(1)}%</div>
         </div>
@@ -62,12 +62,12 @@ export const TyreWear = ({ wear }: TyreWearProps) => {
         {/* Rear Right */}
         <div className="tyre-wear__item">
           <div className="tyre-wear__label">RR</div>
-          <div 
+          <div
             className="tyre-wear__bar"
             style={{
               backgroundColor: getWearColor(wear.rearRight),
-              width: `${wear.rearRight}%`
-            }} 
+              width: `${wear.rearRight}%`,
+            }}
           />
           <div className="tyre-wear__value">{wear.rearRight.toFixed(1)}%</div>
         </div>

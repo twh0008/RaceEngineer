@@ -27,15 +27,11 @@ export const TestComponent = () => {
       <div className="test-component__content">
         {/* Speed and RPM */}
         <div className="test-component__card">
-          <div className="test-component__speed">
-            {telemetry.speed} km/h
-          </div>
+          <div className="test-component__speed">{telemetry.speed} km/h</div>
           <div className="test-component__rpm">
             {telemetry.rpm.toLocaleString()} RPM
           </div>
-          <div className="test-component__gear">
-            Gear: {telemetry.gear}
-          </div>
+          <div className="test-component__gear">Gear: {telemetry.gear}</div>
         </div>
 
         {/* Lap Times */}
@@ -43,15 +39,21 @@ export const TestComponent = () => {
           <div className="test-component__lap-times">
             <div>
               <span className="test-component__lap-label">Current:</span>
-              <span className="test-component__current-lap">{telemetry.lapTime}</span>
+              <span className="test-component__current-lap">
+                {telemetry.lapTime}
+              </span>
             </div>
             <div>
               <span className="test-component__lap-label">Last:</span>
-              <span className="test-component__last-lap">{telemetry.lastLap}</span>
+              <span className="test-component__last-lap">
+                {telemetry.lastLap}
+              </span>
             </div>
             <div>
               <span className="test-component__best-label">Best:</span>
-              <span className="test-component__best-lap">{telemetry.bestLap}</span>
+              <span className="test-component__best-lap">
+                {telemetry.bestLap}
+              </span>
             </div>
           </div>
         </div>
@@ -73,9 +75,13 @@ export const TestComponent = () => {
             </div>
             <div>
               <span className="test-component__status-label">DRS:</span>
-              <span className={`test-component__status-value ${
-                telemetry.drs ? 'test-component__drs--on' : 'test-component__drs--off'
-              }`}>
+              <span
+                className={`test-component__status-value ${
+                  telemetry.drs
+                    ? 'test-component__drs--on'
+                    : 'test-component__drs--off'
+                }`}
+              >
                 {telemetry.drs ? 'ON' : 'OFF'}
               </span>
             </div>

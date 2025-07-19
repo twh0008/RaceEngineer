@@ -1,20 +1,32 @@
 import { useCallback } from 'react';
 import type { OverlayConfig } from '../types/overlays';
 
-
 // Declare the electron API for TypeScript
 declare global {
   interface Window {
     electronAPI: {
       toggleClickThrough: (enabled: boolean) => Promise<void>;
-      getWindowBounds: () => Promise<{ x: number; y: number; width: number; height: number } | null>;
+      getWindowBounds: () => Promise<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      } | null>;
       createOverlay: (overlayConfig: OverlayConfig) => Promise<string>;
       closeOverlay: (overlayId: string) => Promise<void>;
       closeAllOverlays: () => Promise<void>;
-      getOverlayPosition: (overlayId: string) => Promise<{ x: number; y: number } | null>;
-      saveOverlayPositions: (positions: Record<string, { x: number; y: number }>) => Promise<void>;
-      loadOverlayPositions: () => Promise<Record<string, { x: number; y: number }>>;
-      updateOverlayProperties: (overlayConfig: OverlayConfig) => Promise<string>;
+      getOverlayPosition: (
+        overlayId: string
+      ) => Promise<{ x: number; y: number } | null>;
+      saveOverlayPositions: (
+        positions: Record<string, { x: number; y: number }>
+      ) => Promise<void>;
+      loadOverlayPositions: () => Promise<
+        Record<string, { x: number; y: number }>
+      >;
+      updateOverlayProperties: (
+        overlayConfig: OverlayConfig
+      ) => Promise<string>;
     };
   }
 }
@@ -27,10 +39,13 @@ export function useElectron() {
   const getWindowBounds = useCallback(() => {
     return window.electronAPI?.getWindowBounds();
   }, []);
-  
+
   const createOverlay = useCallback((overlayConfig: OverlayConfig) => {
     console.log('useElectron: createOverlay called with:', overlayConfig);
-    console.log('useElectron: window.electronAPI exists:', !!window.electronAPI);
+    console.log(
+      'useElectron: window.electronAPI exists:',
+      !!window.electronAPI
+    );
     if (window.electronAPI) {
       console.log('useElectron: calling window.electronAPI.createOverlay');
       return window.electronAPI.createOverlay(overlayConfig);
@@ -46,28 +61,39 @@ export function useElectron() {
   const closeAllOverlays = useCallback(() => {
     return window.electronAPI?.closeAllOverlays();
   }, []);
-  
+
   const getOverlayPosition = useCallback((overlayId: string) => {
     return window.electronAPI?.getOverlayPosition(overlayId);
   }, []);
-  
-  const saveOverlayPositions = useCallback((positions: Record<string, { x: number; y: number }>) => {
-    return window.electronAPI?.saveOverlayPositions(positions);
-  }, []);
-  
+
+  const saveOverlayPositions = useCallback(
+    (positions: Record<string, { x: number; y: number }>) => {
+      return window.electronAPI?.saveOverlayPositions(positions);
+    },
+    []
+  );
+
   const loadOverlayPositions = useCallback(() => {
     return window.electronAPI?.loadOverlayPositions();
   }, []);
 
-  const updateOverlayProperties = useCallback((overlayConfig: OverlayConfig) => {
-    console.log('useElectron: updateOverlayProperties called with:', overlayConfig);
-    if (window.electronAPI) {
-      console.log('useElectron: calling window.electronAPI.updateOverlayProperties');
-      return window.electronAPI.updateOverlayProperties(overlayConfig);
-    }
-    console.log('useElectron: window.electronAPI not available');
-    return Promise.reject('electronAPI not available');
-  }, []);
+  const updateOverlayProperties = useCallback(
+    (overlayConfig: OverlayConfig) => {
+      console.log(
+        'useElectron: updateOverlayProperties called with:',
+        overlayConfig
+      );
+      if (window.electronAPI) {
+        console.log(
+          'useElectron: calling window.electronAPI.updateOverlayProperties'
+        );
+        return window.electronAPI.updateOverlayProperties(overlayConfig);
+      }
+      console.log('useElectron: window.electronAPI not available');
+      return Promise.reject('electronAPI not available');
+    },
+    []
+  );
 
   return {
     toggleClickThrough,

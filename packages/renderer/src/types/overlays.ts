@@ -22,34 +22,35 @@ export const AVAILABLE_OVERLAYS: OverlayType[] = [
     name: 'Telemetry Dashboard',
     description: 'Main racing telemetry display with speed, gear, lap times',
     component: 'Dashboard',
-    defaultSize: { width: 1000, height: 200 }
+    defaultSize: { width: 1000, height: 200 },
   },
   {
     id: 'tyre-wear',
     name: 'Tyre Wear Monitor',
     description: 'Real-time tire wear and temperature monitoring',
     component: 'TyreWear',
-    defaultSize: { width: 300, height: 200 }
+    defaultSize: { width: 300, height: 200 },
   },
   {
     id: 'relative-widget',
     name: 'Relative Widget',
     description: 'Shows position relative to cars around you',
     component: 'RelativeWidget',
-    defaultSize: { width: 400, height: 300 }
+    defaultSize: { width: 400, height: 300 },
   },
   {
     id: 'input-telemetry',
     name: 'Input Telemetry',
     description: 'Shows steering, brake, and throttle inputs',
     component: 'InputTelemetry',
-    defaultSize: { width: 350, height: 250 }
+    defaultSize: { width: 350, height: 250 },
   },
   {
     id: 'track-position',
     name: 'Track Position',
-    description: 'Shows car position on track layout with circuit visualization',
+    description:
+      'Shows car position on track layout with circuit visualization',
     component: 'TrackPositionOverlay',
-    defaultSize: { width: 350, height: 300 }
-  }
+    defaultSize: { width: 350, height: 300 },
+  },
 ];
