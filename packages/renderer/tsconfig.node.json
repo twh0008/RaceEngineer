@@ -22,10 +22,8 @@
     "noUncheckedSideEffectImports": true,
 
     /* Compiler Options for Types */
-    "typeRoots": ["./node_modules/@types", "../../packages/iracing-sdk-js/src"],
   },
   "include": [
     "vite.config.ts",
-    "../../packages/iracing-sdk-js/src/**/*",
   ]
 }
