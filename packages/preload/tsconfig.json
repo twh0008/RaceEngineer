@@ -11,7 +11,8 @@
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["../*"]
+      "@app/*": ["../*"],
+      "@iracing/*": ["../renderer/src/types/iracing/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "../../types/**/*.d.ts"],

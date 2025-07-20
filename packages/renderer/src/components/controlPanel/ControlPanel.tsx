@@ -6,6 +6,7 @@ import { OverlayConfigPanel } from './OverlayConfigPanel';
 import { StatusCardPanel } from './StatusCardPanel';
 import dragHandle from '../../assets/drag-handle.svg';
 import anchorIcon from '../../assets/anchor-icon.svg';
+import type { IRacingTelem, IRacingSessionInfo } from '@iracing/';
 import './styles/ControlPanel.css';
 import './styles/AnchorMode.css';
 
@@ -29,6 +30,11 @@ export const ControlPanel = () => {
     Record<string, { x: number; y: number }>
   >({});
   const [isIracingConnected, setIsIracingConnected] = useState(false);
+  const [iracingTelemetry, setIracingTelemetry] = useState<IRacingTelem | null>(
+    null
+  );
+  const [iracingSessionInfo, setIracingSessionInfo] =
+    useState<IRacingSessionInfo | null>(null);
   const {
     createOverlay,
     closeOverlay,
@@ -391,25 +397,35 @@ export const ControlPanel = () => {
     }
   };
 
-  // Poll iRacing connection status from main process via IPC
+  // Poll iRacing connection status and session info
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    if (window.electronAPI && window.electronAPI.getIracingStatus) {
+    if (window.electronAPI) {
       interval = setInterval(async () => {
         try {
+          // Poll iRacing connection status
           const status = await window.electronAPI.getIracingStatus();
-          console.log('Polled iRacing status:', status);
           setIsIracingConnected(!!status);
+
+          // Poll session info only if iRacing is connected
+          if (status) {
+            console.log('Polling iRacing session info...');
+            const sessionInfo =
+              await window.electronAPI.getIracingSessionInfo();
+            setIracingSessionInfo(sessionInfo);
+            console.log('Successfully polled iRacing session info');
+          } else {
+            console.log('iRacing is not connected, skipping session poll');
+          }
         } catch (error) {
-          console.error('Failed to poll iRacing status:', error);
-          setIsIracingConnected(false);
+          console.error('Failed to poll iRacing data:', error);
         }
-      }, 1000);
+      }, 100); // Adjust interval based on SDK update rate
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, []);
+  }, [window.electronAPI]);
 
   return (
     <div className="control-panel">
@@ -431,6 +447,7 @@ export const ControlPanel = () => {
           updateOverlayProperties={updateOverlayProperties}
           windowElectronAPI={window.electronAPI}
           isIracingConnected={isIracingConnected}
+          iracingSessionInfo={iracingSessionInfo}
         />
         <div className="panel-layout">
           {/* Left Panel - Overlay Selection */}

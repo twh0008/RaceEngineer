@@ -10,11 +10,12 @@ import { allowInternalOrigins } from './modules/BlockNotAllowdOrigins.js';
 import { allowExternalUrls } from './modules/ExternalUrls.js';
 import { ipcMain } from 'electron';
 import { createRequire } from 'module';
-import { IRacingSDK, ITelemetry, ISessionInfo } from '@iracing/';
+import { IRacingSDK } from '@iracing/';
 
 const require = createRequire(import.meta.url);
 const importedModule = require('../../iracing-sdk-js/src/iracing-sdk-js.js');
-let irsdk: IRacingSDK | null = importedModule.default || importedModule;
+let iracingInstance: IRacingSDK.irInstance | null = null;
+let irsdk: IRacingSDK = importedModule.default || importedModule;
 let isIracingConnected: boolean = false;
 
 function isIrSdkLoaded(): boolean {
@@ -37,38 +38,20 @@ async function initIracingSdk() {
     );
     return null;
   }
-  let irsdkCreateirsdk: IRacingSDK | null = null;
-  try {
-    irsdkCreateirsdk = irsdk.getInstance();
-  } catch (e) {
-    console.log('iRacing SDK instance not found, creating a new one...');
-    try {
-      irsdkCreateirsdk = irsdk.init({ telemetryUpdateInterval: 100 });
-    } catch (e) {
-      console.error('Failed to initialize iRacing SDK:', e);
-      return null;
-    }
+
+  if (!iracingInstance) {
+    iracingInstance = irsdk.init({ telemetryUpdateInterval: 100 });
+    console.log('SDK instance created:', !!iracingInstance);
+    iracingInstance.on('Connected', () => {
+      isIracingConnected = true;
+      console.log('iRacing Connected');
+    });
+    iracingInstance.on('Disconnected', () => {
+      isIracingConnected = false;
+      console.log('iRacing Disconnected');
+    });
   }
-  if (!irsdkCreateirsdk) {
-    console.error('Failed to create iRacing SDK instance.');
-    return null;
-  }
-  irsdkCreateirsdk.on('connected', () => {
-    console.log('iRacing SDK connected');
-    isIracingConnected = true;
-  });
-  irsdkCreateirsdk.on('disconnected', () => {
-    console.log('iRacing SDK disconnected');
-    isIracingConnected = false;
-  });
-  irsdkCreateirsdk.on('telemetry', (telemetry: ITelemetry) => {
-    console.log('Received telemetry data:', telemetry);
-    // Temporary: Log telemetry data to console
-  });
-  irsdkCreateirsdk.on('sessionInfo', (sessionInfo: ISessionInfo) => {
-    console.log('Received session info:', sessionInfo);
-    // Temporary: Log session info to console
-  });
+  return iracingInstance;
 }
 
 // IPC handler for renderer to get iRacing connection status
@@ -76,44 +59,21 @@ ipcMain.handle('iracing:getStatus', () => {
   return isIracingConnected;
 });
 
-ipcMain.handle('iracing:telemetry', () => {
-  // create instance when accessing telemetry
-  let iracingInstance: IRacingSDK | null = null;
-  if (!isIrSdkLoaded()) {
-    console.error('iRacing SDK is not loaded.');
-    return null;
-  } else {
-    iracingInstance = irsdk.getInstance();
-  }
+ipcMain.handle('iracing:getTelemetry', async () => {
   if (!iracingInstance) {
+    console.error('iRacing SDK is not initialized.');
     return null;
   }
-  const telemetry: ITelemetry | null = iracingInstance.telemetry;
-  if (!telemetry) {
-    return null;
-  }
-  // Return a copy of the telemetry data to avoid direct mutation
+  const telemetry: IRacingSDK.telemetry = iracingInstance.telemetry;
   return { ...telemetry };
 });
 
-ipcMain.handle('iracing:sessionInfo', () => {
-  // create instance when accessing session info
-  let iracingInstance: IRacingSDK | null = null;
-  if (!isIrSdkLoaded()) {
-    console.error('iRacing SDK is not loaded.');
-    return null;
-  } else {
-    iracingInstance = irsdk.getInstance();
-  }
-  // Check if the instance is available
+ipcMain.handle('iracing:getSessionInfo', async () => {
   if (!iracingInstance) {
+    console.error('iRacing SDK is not initialized.');
     return null;
   }
-  const sessionInfo: ISessionInfo | null = iracingInstance.sessionInfo;
-  if (!sessionInfo) {
-    return null;
-  }
-  // Return a copy of the session info to avoid direct mutation
+  const sessionInfo: IRacingSDK.sessionInfo = iracingInstance.sessionInfo;
   return { ...sessionInfo };
 });
 

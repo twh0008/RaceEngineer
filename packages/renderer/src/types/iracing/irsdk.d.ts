@@ -140,7 +140,7 @@ type irEvent =
   | 'Disconnected'
   | 'update';
 
-interface irInstance {
+export interface irInstance {
   telemetry: ITelemetry | IrDataUnk;
   telemetryDescription: string | object | IrDataUnk; // telemetry description as string or object
   sessionInfo: ISessionInfo | IrDataUnk; // session info as object or null

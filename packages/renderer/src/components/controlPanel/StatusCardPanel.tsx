@@ -1,5 +1,6 @@
 import React from 'react';
 import type { OverlayConfig } from '../../types/overlays';
+import type { IRacingSessionInfo } from '@iracing/*';
 import './styles/AnchorMode.css';
 import './styles/StatusCardPanel.css';
 
@@ -17,6 +18,7 @@ interface StatusCardPanelProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   windowElectronAPI: any;
   isIracingConnected?: boolean;
+  iracingSessionInfo?: IRacingSessionInfo;
 }
 
 export const StatusCardPanel: React.FC<StatusCardPanelProps> = ({
@@ -29,6 +31,7 @@ export const StatusCardPanel: React.FC<StatusCardPanelProps> = ({
   startSession,
   windowElectronAPI,
   isIracingConnected,
+  iracingSessionInfo,
 }) => (
   <div className="status-card">
     <div className="status-header">
@@ -45,6 +48,21 @@ export const StatusCardPanel: React.FC<StatusCardPanelProps> = ({
             iRacing: {isIracingConnected ? 'Connected' : 'Not Connected'}
           </span>
         </div>
+        {/* iRacing Session Info */}
+        {iracingSessionInfo && isIracingConnected && (
+          <div className="iracing-session-info compact">
+            <h4 style={{ marginBottom: '4px' }}>Track Info</h4>
+            <p>
+              {iracingSessionInfo.data.WeekendInfo.TrackDisplayName} -{' '}
+              {iracingSessionInfo.data.WeekendInfo.TrackLength}
+            </p>
+            <p>
+              Official:{' '}
+              {iracingSessionInfo.data.WeekendInfo.Official ? 'Yes' : 'No'},
+              Participants: {iracingSessionInfo.data.DriverInfo.Drivers.length}
+            </p>
+          </div>
+        )}
       </div>
       <div className="status-controls">
         {isConnected && (

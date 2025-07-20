@@ -1,5 +1,7 @@
+import { get } from 'node:http';
 import * as exports from './index.js';
 import { contextBridge, ipcRenderer } from 'electron';
+import type { ITelemetry, ISessionInfo } from '@iracing/';
 
 interface OverlayConfig {
   id: string;
@@ -34,7 +36,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   loadOverlayPositions: () => ipcRenderer.invoke('load-overlay-positions'),
   updateOverlayProperties: (overlayConfig: OverlayConfig) =>
     ipcRenderer.invoke('update-overlay-properties', overlayConfig),
-  getIracingStatus: () => ipcRenderer.invoke('iracing:getStatus'),
+  getIracingStatus: (status: boolean) =>
+    ipcRenderer.invoke('iracing:getStatus', status),
+  getIracingTelemetry: (telemetry: ITelemetry | null) =>
+    ipcRenderer.invoke('iracing:getTelemetry', telemetry),
+  getIracingSessionInfo: (sessionInfo: ISessionInfo | null) =>
+    ipcRenderer.invoke('iracing:getSessionInfo', sessionInfo),
 });
 
 // Re-export for tests

@@ -1,11 +1,14 @@
 import { useCallback } from 'react';
 import type { OverlayConfig } from '../types/overlays';
+import type { ITelemetry, ISessionInfo } from '@iracing/';
 
 // Declare the electron API for TypeScript
 declare global {
   interface Window {
     electronAPI: {
       getIracingStatus: () => Promise<boolean>;
+      getIracingTelemetry: () => Promise<ITelemetry | null>;
+      getIracingSessionInfo: () => Promise<ISessionInfo | null>;
       toggleClickThrough: (enabled: boolean) => Promise<void>;
       getWindowBounds: () => Promise<{
         x: number;
