@@ -8,13 +8,13 @@ import { hardwareAccelerationMode } from './modules/HardwareAccelerationModule.j
 import { autoUpdater } from './modules/AutoUpdater.js';
 import { allowInternalOrigins } from './modules/BlockNotAllowdOrigins.js';
 import { allowExternalUrls } from './modules/ExternalUrls.js';
-import { ipcMain } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
 import { createRequire } from 'module';
-import { IRacingSDK } from '@iracing/';
+import { IRacingSDK, irInstance } from '@iracing/';
 
 const require = createRequire(import.meta.url);
 const importedModule = require('../../iracing-sdk-js/src/iracing-sdk-js.js');
-let iracingInstance: IRacingSDK.irInstance | null = null;
+let iracingInstance: irInstance | null = null;
 let irsdk: IRacingSDK = importedModule.default || importedModule;
 let isIracingConnected: boolean = false;
 
@@ -39,42 +39,57 @@ async function initIracingSdk() {
     return null;
   }
 
+  function sendDataToAllWindows(channel: string, data: any) {
+    const allWindows = BrowserWindow.getAllWindows();
+    allWindows.forEach((window) => {
+      try {
+        console.log(
+          `Sending data to window: ${window.id}, channel: ${channel}`
+        );
+        window.webContents.send(channel, data);
+      } catch (error) {
+        console.error(`Failed to send data to window: ${window.id}`, error);
+      }
+    });
+  }
+
   if (!iracingInstance) {
     iracingInstance = irsdk.init({ telemetryUpdateInterval: 100 });
     console.log('SDK instance created:', !!iracingInstance);
+
+    // Listen for connection events
     iracingInstance.on('Connected', () => {
       isIracingConnected = true;
-      console.log('iRacing Connected');
+      console.log('iRacing Connected, isIracingConnected:', isIracingConnected);
+      sendDataToAllWindows('iracing:updateStatus', { isConnected: true });
     });
+
     iracingInstance.on('Disconnected', () => {
       isIracingConnected = false;
-      console.log('iRacing Disconnected');
+      console.log(
+        'iRacing Disconnected, isIracingConnected:',
+        isIracingConnected
+      );
+      sendDataToAllWindows('iracing:updateStatus', { isConnected: false });
+    });
+
+    // Listen for telemetry updates
+    iracingInstance.on('Telemetry', (telemetry: irInstance.telemetry) => {
+      console.log('Telemetry updated');
+      sendDataToAllWindows('iracing:updateTelemetry', telemetry);
+    });
+
+    // Listen for session info updates
+    iracingInstance.on('SessionInfo', (sessionInfo: irInstance.sessionInfo) => {
+      console.log('Session info updated');
+      sendDataToAllWindows('iracing:updateSessionInfo', sessionInfo);
     });
   }
   return iracingInstance;
 }
 
-// IPC handler for renderer to get iRacing connection status
-ipcMain.handle('iracing:getStatus', () => {
-  return isIracingConnected;
-});
-
-ipcMain.handle('iracing:getTelemetry', async () => {
-  if (!iracingInstance) {
-    console.error('iRacing SDK is not initialized.');
-    return null;
-  }
-  const telemetry: IRacingSDK.telemetry = iracingInstance.telemetry;
-  return { ...telemetry };
-});
-
-ipcMain.handle('iracing:getSessionInfo', async () => {
-  if (!iracingInstance) {
-    console.error('iRacing SDK is not initialized.');
-    return null;
-  }
-  const sessionInfo: IRacingSDK.sessionInfo = iracingInstance.sessionInfo;
-  return { ...sessionInfo };
+ipcMain.handle('get-status', async () => {
+  return { isConnected: isIracingConnected };
 });
 
 export async function initApp(initConfig: AppInitConfig) {

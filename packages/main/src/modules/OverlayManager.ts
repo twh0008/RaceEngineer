@@ -142,6 +142,19 @@ class OverlayManager implements AppModule {
       console.log('IPC: load-overlay-positions called');
       return this.loadOverlayPositions();
     });
+
+    ipcMain.handle(
+      'on',
+      (_event, channel: string, listener: (...args: any[]) => void) => {
+        console.log(`IPC: on called for channel: ${channel}`);
+        ipcMain.on(channel, listener);
+      }
+    );
+
+    ipcMain.handle('remove-event-listeners', (_event, channel: string) => {
+      console.log(`IPC: remove-event-listeners called for channel: ${channel}`);
+      ipcMain.removeAllListeners(channel);
+    });
   }
 
   private async updateOverlayProperties(

@@ -1,7 +1,6 @@
 import { get } from 'node:http';
 import * as exports from './index.js';
 import { contextBridge, ipcRenderer } from 'electron';
-import type { ITelemetry, ISessionInfo } from '@iracing/';
 
 interface OverlayConfig {
   id: string;
@@ -19,7 +18,7 @@ for (const exportsKey in exports) {
   }
 }
 
-// Expose overlay management APIs to the renderer process
+// Expose overlay management and iRacing event APIs to the renderer process
 contextBridge.exposeInMainWorld('electronAPI', {
   toggleClickThrough: (enabled: boolean) =>
     ipcRenderer.invoke('toggle-click-through', enabled),
@@ -36,12 +35,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
   loadOverlayPositions: () => ipcRenderer.invoke('load-overlay-positions'),
   updateOverlayProperties: (overlayConfig: OverlayConfig) =>
     ipcRenderer.invoke('update-overlay-properties', overlayConfig),
-  getIracingStatus: (status: boolean) =>
-    ipcRenderer.invoke('iracing:getStatus', status),
-  getIracingTelemetry: (telemetry: ITelemetry | null) =>
-    ipcRenderer.invoke('iracing:getTelemetry', telemetry),
-  getIracingSessionInfo: (sessionInfo: ISessionInfo | null) =>
-    ipcRenderer.invoke('iracing:getSessionInfo', sessionInfo),
+  getStatus: () => ipcRenderer.invoke('get-status'),
+
+  // Add event listener methods for iRacing updates
+  on: (channel: string, listener: (...args: any[]) => void) => {
+    console.log(`Setting up listener for channel: ${channel}`);
+    ipcRenderer.on(channel, listener);
+  },
+  removeAllListeners: (channel: string) => {
+    console.log(`Removing all listeners for channel: ${channel}`);
+    ipcRenderer.removeAllListeners(channel);
+  },
 });
 
 // Re-export for tests
