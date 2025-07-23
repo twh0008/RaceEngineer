@@ -14,6 +14,7 @@
       "@app/preload": ["../preload"],
       "@app/renderer": ["../renderer"],
       "@iracing/*": ["../renderer/src/types/iracing/index.ts"],
+      "@constants/*": ["../constants/index.ts"],
     }
   },
   "include": ["src/**/*.ts", "../../types/**/*.d.ts"],

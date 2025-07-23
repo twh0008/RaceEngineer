@@ -26,7 +26,8 @@
     /* Path Aliases */
     "paths": {
       "@iracing/*": ["./src/types/iracing/index.ts"],
+      "@constants/*": ["../constants/index.ts"],
     }
   },
-  "include": ["src"]
+  "include": ["src", "../constants"]
 }
