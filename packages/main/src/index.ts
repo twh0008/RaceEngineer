@@ -8,7 +8,7 @@ import { hardwareAccelerationMode } from './modules/HardwareAccelerationModule.j
 import { autoUpdater } from './modules/AutoUpdater.js';
 import { allowInternalOrigins } from './modules/BlockNotAllowdOrigins.js';
 import { allowExternalUrls } from './modules/ExternalUrls.js';
-import { IracingSdkModule } from './modules/irSdkHandles.js';
+import { initIracingSdk } from './modules/irSdkHandles.js';
 
 export async function initApp(initConfig: AppInitConfig) {
   const moduleRunner = createModuleRunner()
@@ -23,7 +23,7 @@ export async function initApp(initConfig: AppInitConfig) {
     .init(terminateAppOnLastWindowClose())
     .init(hardwareAccelerationMode({ enable: false }))
     .init(autoUpdater())
-    .init(new IracingSdkModule())
+    .init(initIracingSdk())
 
     // Install DevTools extension if needed
     // .init(chromeDevToolsExtension({extension: 'VUEJS3_DEVTOOLS'}))

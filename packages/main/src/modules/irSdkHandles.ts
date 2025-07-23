@@ -5,7 +5,7 @@ import { IRacingSDK, irInstance } from '@iracing/';
 import { IpcChannels } from '@constants/';
 import { createRequire } from 'module';
 
-export class IracingSdkModule implements AppModule {
+class IracingSdkModule implements AppModule {
   private iracingInstance: irInstance | null = null;
   private irsdk: IRacingSDK | null = null;
   private isIracingConnected: boolean = false;
@@ -113,4 +113,10 @@ export class IracingSdkModule implements AppModule {
     }
     this.isIracingConnected = false;
   }
+}
+
+export function initIracingSdk(
+  ...args: ConstructorParameters<typeof IracingSdkModule>
+) {
+  return new IracingSdkModule(...args);
 }
