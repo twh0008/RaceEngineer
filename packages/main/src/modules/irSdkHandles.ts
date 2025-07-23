@@ -1,36 +1,31 @@
+import { AppModule } from '../AppModule.js';
+import { ModuleContext } from '../ModuleContext.js';
 import { ipcMain, BrowserWindow } from 'electron';
-import { createRequire } from 'module';
 import { IRacingSDK, irInstance } from '@iracing/';
 import { IpcChannels } from '@constants/';
+import { createRequire } from 'module';
 
-const require = createRequire(import.meta.url);
-const importedModule = require('../../iracing-sdk-js/src/iracing-sdk-js.js');
-let iracingInstance: irInstance | null = null;
-let irsdk: IRacingSDK = importedModule.default || importedModule;
-let isIracingConnected: boolean = false;
+export class IracingSdkModule implements AppModule {
+  private iracingInstance: irInstance | null = null;
+  private irsdk: IRacingSDK | null = null;
+  private isIracingConnected: boolean = false;
 
-function isIrSdkLoaded(): boolean {
-  if (irsdk) {
-    return true;
-  }
-  try {
-    irsdk = importedModule.default || importedModule;
-    return !!irsdk;
-  } catch (e) {
-    console.error('Failed to load irsdk:', e);
-    return false;
-  }
-}
-
-export async function initIracingSdk() {
-  if (!isIrSdkLoaded()) {
-    console.error(
-      'iracing-sdk-js module could not be loaded. Cannot initialize iRacing SDK.'
-    );
-    return null;
+  private isIrSdkLoaded(): boolean {
+    if (this.irsdk) {
+      return true;
+    }
+    try {
+      const require = createRequire(import.meta.url);
+      const importedModule = require('../../iracing-sdk-js/src/iracing-sdk-js.js');
+      this.irsdk = importedModule.default || importedModule;
+      return !!this.irsdk;
+    } catch (e) {
+      console.error('Failed to load irsdk:', e);
+      return false;
+    }
   }
 
-  function sendDataToAllWindows(channel: string, data: any) {
+  private sendDataToAllWindows(channel: string, data: any): void {
     const allWindows = BrowserWindow.getAllWindows();
     allWindows.forEach((window) => {
       try {
@@ -44,48 +39,78 @@ export async function initIracingSdk() {
     });
   }
 
-  if (!iracingInstance) {
-    iracingInstance = irsdk.init({ telemetryUpdateInterval: 100 });
-    console.log('SDK instance created:', !!iracingInstance);
-
-    // Listen for connection events
-    iracingInstance.on('Connected', () => {
-      isIracingConnected = true;
-      console.log('iRacing Connected, isIracingConnected:', isIracingConnected);
-      sendDataToAllWindows('iracing:updateStatus', { isConnected: true });
-    });
-
-    iracingInstance.on('Disconnected', () => {
-      isIracingConnected = false;
-      console.log(
-        'iRacing Disconnected, isIracingConnected:',
-        isIracingConnected
+  enable({ app }: ModuleContext): void {
+    if (!this.isIrSdkLoaded()) {
+      console.error(
+        'iracing-sdk-js module could not be loaded. Cannot initialize iRacing SDK.'
       );
-      sendDataToAllWindows(IpcChannels.IRACING_UPDATE_STATUS, {
-        isConnected: false,
+      return;
+    }
+
+    if (!this.iracingInstance) {
+      this.iracingInstance = this.irsdk!.init({ telemetryUpdateInterval: 100 });
+      console.log('SDK instance created:', !!this.iracingInstance);
+
+      // Listen for connection events
+      this.iracingInstance.on('Connected', () => {
+        this.isIracingConnected = true;
+        console.log(
+          'iRacing Connected, isIracingConnected:',
+          this.isIracingConnected
+        );
+        this.sendDataToAllWindows(IpcChannels.IRACING_UPDATE_STATUS, {
+          isConnected: true,
+        });
       });
-    });
 
-    // Listen for telemetry updates
-    iracingInstance.on('Telemetry', (telemetry: irInstance.telemetry) => {
-      console.log('Telemetry updated');
-      sendDataToAllWindows(IpcChannels.IRACING_UPDATE_TELEMETRY, telemetry);
-    });
+      this.iracingInstance.on('Disconnected', () => {
+        this.isIracingConnected = false;
+        console.log(
+          'iRacing Disconnected, isIracingConnected:',
+          this.isIracingConnected
+        );
+        this.sendDataToAllWindows(IpcChannels.IRACING_UPDATE_STATUS, {
+          isConnected: false,
+        });
+      });
 
-    // Listen for session info updates
-    iracingInstance.on('SessionInfo', (sessionInfo: irInstance.sessionInfo) => {
-      console.log('Session info updated');
-      sendDataToAllWindows(
-        IpcChannels.IRACING_UPDATE_SESSION_INFO,
-        sessionInfo
+      // Listen for telemetry updates
+      this.iracingInstance.on(
+        'Telemetry',
+        (telemetry: irInstance.telemetry) => {
+          console.log('Telemetry updated');
+          this.sendDataToAllWindows(IpcChannels.IRACING_TELEMETRY, telemetry);
+        }
       );
+
+      // Listen for session info updates
+      this.iracingInstance.on(
+        'SessionInfo',
+        (sessionInfo: irInstance.sessionInfo) => {
+          console.log('Session info updated');
+          this.sendDataToAllWindows(
+            IpcChannels.IRACING_SESSION_INFO,
+            sessionInfo
+          );
+        }
+      );
+    }
+
+    // Register IPC handlers
+    ipcMain.handle(IpcChannels.IRACING_GET_STATUS, async () => {
+      return { isConnected: this.isIracingConnected };
     });
   }
-  return iracingInstance;
-}
 
-export function checkIracingManually() {
-  ipcMain.handle(IpcChannels.GET_STATUS, async () => {
-    return { isConnected: isIracingConnected };
-  });
+  disable({ app }: ModuleContext): void {
+    // Clean up IPC handlers
+    ipcMain.removeHandler(IpcChannels.IRACING_GET_STATUS);
+
+    // Clean up SDK instance
+    if (this.iracingInstance) {
+      this.iracingInstance.removeAllListeners();
+      this.iracingInstance = null;
+    }
+    this.isIracingConnected = false;
+  }
 }
