@@ -1,6 +1,14 @@
 import { useCallback } from 'react';
 import type { OverlayConfig } from '../types/overlays';
+import type { ISessionInfo, ITelemetry } from '@iracing/types/';
+import { IpcChannels } from '@constants/';
 
+type IpcChannelArgs = {
+  [IpcChannels.IRACING_TELEMETRY]: [ITelemetry];
+  [IpcChannels.IRACING_SESSION_INFO]: [ISessionInfo];
+  [IpcChannels.IRACING_UPDATE_STATUS]: [{ isConnected: boolean }];
+  [IpcChannels.IRACING_GET_STATUS]: [];
+};
 // Declare the electron API for TypeScript
 declare global {
   interface Window {
@@ -27,9 +35,11 @@ declare global {
       updateOverlayProperties: (
         overlayConfig: OverlayConfig
       ) => Promise<string>;
-      on: (channel: string, listener: (...args: any[]) => void) => void;
+      on: <K extends keyof IpcChannelArgs>(
+        channel: K,
+        listener: (...args: IpcChannelArgs[K]) => void
+      ) => void;
       removeAllListeners: (channel: string) => void;
-      getStatus: () => Promise<{ isConnected: boolean }>;
     };
   }
 }
@@ -100,7 +110,10 @@ export function useElectron() {
 
   // Add event listener methods for iRacing updates
   const on = useCallback(
-    (channel: string, listener: (...args: any[]) => void) => {
+    <K extends keyof IpcChannelArgs>(
+      channel: K,
+      listener: (...args: IpcChannelArgs[K]) => void
+    ) => {
       window.electronAPI?.on(channel, listener);
     },
     []
@@ -108,10 +121,6 @@ export function useElectron() {
 
   const removeAllListeners = useCallback((channel: string) => {
     window.electronAPI?.removeAllListeners(channel);
-  }, []);
-
-  const getStatus = useCallback(() => {
-    return window.electronAPI?.getStatus();
   }, []);
 
   return {
@@ -126,7 +135,6 @@ export function useElectron() {
     updateOverlayProperties,
     on,
     removeAllListeners,
-    getStatus,
     isElectron: !!window.electronAPI,
   };
 }
