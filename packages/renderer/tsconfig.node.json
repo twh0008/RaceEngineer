@@ -23,7 +23,13 @@
 
     /* Compiler Options for Types */
   },
+  "paths": {
+    "@iracing/types/*": ["./src/types/iracing/index.ts"],
+    "@iracing/components/*": ["./src/components/iracing/index.ts"],
+    "@constants/*": ["../constants/index.ts"]
+  },
   "include": [
     "vite.config.ts",
+    "src",
   ]
 }

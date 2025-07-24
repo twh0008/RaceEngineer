@@ -1,7 +1,7 @@
 import { AppModule } from '../AppModule.js';
 import { ModuleContext } from '../ModuleContext.js';
 import { ipcMain, BrowserWindow } from 'electron';
-import { IRacingSDK, irInstance } from '@iracing/';
+import { IRacingSDK, irInstance } from '@iracing/types/';
 import { IpcChannels } from '@constants/';
 import { createRequire } from 'module';
 
